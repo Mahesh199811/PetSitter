@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="PetSitterConnect.Views.CreatePetCareRequestPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:PetSitterConnect.ViewModels"
+             xmlns:models="clr-namespace:PetSitterConnect.Models"
+             xmlns:system="clr-namespace:System;assembly=netstandard"
+             x:DataType="viewmodels:CreatePetCareRequestViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="15">
+            
+            <!-- Pet Selection -->
+            <StackLayout Spacing="5">
+                <Label Text="Select Pet" FontSize="16" FontAttributes="Bold" />
+
+                <!-- Show picker when pets are available -->
+                <Grid ColumnDefinitions="*,Auto" IsVisible="{Binding UserPets.Count, Converter={StaticResource CountToBoolConverter}}">
+                    <Picker Grid.Column="0"
+                            ItemsSource="{Binding UserPets}"
+                            SelectedItem="{Binding SelectedPet}"
+                            ItemDisplayBinding="{Binding Name}"
+                            Title="Choose your pet"
+                            BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray800}}"
+                            TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark=White}" />
+                    <Button Grid.Column="1"
+                            Text="Add Pet"
+                            Command="{Binding AddPetCommand}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource SecondaryDark}}"
+                            TextColor="White"
+                            FontSize="12"
+                            Margin="10,0,0,0" />
+                </Grid>
+
+                <!-- Show message when no pets are available -->
+                <StackLayout IsVisible="{Binding UserPets.Count, Converter={StaticResource CountToInvertedBoolConverter}}"
+                             Spacing="10">
+                    <Frame BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}"
+                           BorderColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                           CornerRadius="8"
+                           Padding="15">
+                        <StackLayout Spacing="10">
+                            <Label Text="No pets found"
+                                   FontSize="16"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray700}, Dark={StaticResource Gray200}}" />
+                            <Label Text="You need to add at least one pet before creating a care request."
+                                   FontSize="14"
+                                   HorizontalOptions="Center"
+                                   HorizontalTextAlignment="Center"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                            <Button Text="Add Your First Pet"
+                                    Command="{Binding AddPetCommand}"
+                                    BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                                    TextColor="White"
+                                    FontSize="16"
+                                    FontAttributes="Bold"
+                                    CornerRadius="8"
+                                    Margin="0,10,0,0" />
+                        </StackLayout>
+                    </Frame>
+                </StackLayout>
+            </StackLayout>
+
+            <!-- Request Title -->
+            <StackLayout Spacing="5">
+                <Label Text="Request Title" FontSize="16" FontAttributes="Bold" />
+                <Entry Text="{Binding Title}"
+                       Placeholder="e.g., Weekend pet sitting needed" />
+            </StackLayout>
+
+            <!-- Description -->
+            <StackLayout Spacing="5">
+                <Label Text="Description" FontSize="16" FontAttributes="Bold" />
+                <Editor Text="{Binding Description}"
+                        Placeholder="Describe what you need..."
+                        HeightRequest="100" />
+            </StackLayout>
+
+            <!-- Care Type -->
+            <StackLayout Spacing="5">
+                <Label Text="Care Type" FontSize="16" FontAttributes="Bold" />
+                <Picker ItemsSource="{Binding CareTypes}"
+                        SelectedItem="{Binding CareType}"
+                        Title="Select care type" />
+            </StackLayout>
+
+            <!-- Dates -->
+            <Label Text="Dates" FontSize="16" FontAttributes="Bold" />
+            <Grid ColumnDefinitions="*,10,*" RowDefinitions="Auto,Auto">
+                <StackLayout Grid.Column="0" Spacing="5">
+                    <Label Text="Start Date" FontSize="14" />
+                    <DatePicker Date="{Binding StartDate}"
+                                MinimumDate="{x:Static system:DateTime.Today}" />
+                </StackLayout>
+                <StackLayout Grid.Column="2" Spacing="5">
+                    <Label Text="End Date" FontSize="14" />
+                    <DatePicker Date="{Binding EndDate}"
+                                MinimumDate="{Binding StartDate}" />
+                </StackLayout>
+            </Grid>
+
+            <!-- Budget -->
+            <StackLayout Spacing="5">
+                <Label Text="Budget" FontSize="16" FontAttributes="Bold" />
+                <Entry Text="{Binding Budget}"
+                       Placeholder="Enter your budget"
+                       Keyboard="Numeric" />
+            </StackLayout>
+
+            <!-- Location -->
+            <StackLayout Spacing="5">
+                <Label Text="Location" FontSize="16" FontAttributes="Bold" />
+                <Entry Text="{Binding Location}"
+                       Placeholder="Enter location" />
+            </StackLayout>
+
+            <!-- Special Instructions -->
+            <StackLayout Spacing="5">
+                <Label Text="Special Instructions (Optional)" FontSize="16" FontAttributes="Bold" />
+                <Editor Text="{Binding SpecialInstructions}"
+                        Placeholder="Any special care instructions..."
+                        HeightRequest="80" />
+            </StackLayout>
+
+            <!-- Error Message -->
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="Red"
+                   FontSize="14"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}" />
+
+            <!-- Buttons -->
+            <Grid ColumnDefinitions="*,10,*" Margin="0,20,0,0">
+                <Button Grid.Column="0"
+                        Text="Cancel"
+                        Command="{Binding CancelCommand}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark=White}" />
+                
+                <Button Grid.Column="2"
+                        Text="Create Request"
+                        Command="{Binding CreateRequestCommand}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                        TextColor="White"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" />
+            </Grid>
+
+            <!-- Activity Indicator -->
+            <ActivityIndicator IsVisible="{Binding IsBusy}"
+                               IsRunning="{Binding IsBusy}"
+                               Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+
+        </StackLayout>
+    </ScrollView>
+
+</ContentPage>

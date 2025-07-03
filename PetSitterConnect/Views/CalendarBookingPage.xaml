@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="PetSitterConnect.Views.CalendarBookingPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:PetSitterConnect.ViewModels"
+             xmlns:models="clr-namespace:PetSitterConnect.Models"
+             x:DataType="viewmodels:CalendarBookingViewModel"
+             Title="{Binding Title}">
+
+    <Grid RowDefinitions="Auto,Auto,*,Auto">
+        
+        <!-- User Role Header -->
+        <Border Grid.Row="0" 
+                BackgroundColor="{Binding UserRoleColor}"
+                StrokeThickness="0"
+                Padding="15,10">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Label Grid.Column="0"
+                       Text="{Binding UserRoleIcon}" 
+                       FontSize="20" 
+                       VerticalOptions="Center" />
+                <StackLayout Grid.Column="1" 
+                             Orientation="Vertical" 
+                             Spacing="2"
+                             Margin="10,0,0,0">
+                    <Label Text="{Binding CurrentUser.FullName}" 
+                           FontSize="16" 
+                           FontAttributes="Bold" 
+                           TextColor="White" />
+                    <Label Text="{Binding SelectionMode, StringFormat='Select {0}'}" 
+                           FontSize="12" 
+                           TextColor="White" 
+                           Opacity="0.9" />
+                </StackLayout>
+                <Border Grid.Column="2" 
+                        BackgroundColor="White" 
+                        StrokeThickness="0"
+                        Padding="8,4" 
+                        StrokeShape="RoundRectangle 12">
+                    <Label Text="{Binding UserRoleLabel}" 
+                           FontSize="10" 
+                           FontAttributes="Bold" 
+                           TextColor="{Binding UserRoleColor}" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Calendar Header -->
+        <Grid Grid.Row="1" 
+              ColumnDefinitions="Auto,*,Auto" 
+              Padding="15,10"
+              BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}">
+            
+            <Button Grid.Column="0"
+                    Text="‹"
+                    Command="{Binding PreviousMonthCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                    FontSize="24"
+                    FontAttributes="Bold"
+                    Padding="10" />
+            
+            <Label Grid.Column="1"
+                   Text="{Binding CurrentMonth, StringFormat='{0:MMMM yyyy}'}"
+                   FontSize="18"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   VerticalOptions="Center"
+                   TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark=White}" />
+            
+            <Button Grid.Column="2"
+                    Text="›"
+                    Command="{Binding NextMonthCommand}"
+                    BackgroundColor="Transparent"
+                    TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                    FontSize="24"
+                    FontAttributes="Bold"
+                    Padding="10" />
+        </Grid>
+
+        <!-- Calendar Grid -->
+        <ScrollView Grid.Row="2">
+            <StackLayout Padding="15" Spacing="10">
+                
+                <!-- Day Headers -->
+                <Grid ColumnDefinitions="*,*,*,*,*,*,*" RowDefinitions="Auto">
+                    <Label Grid.Column="0" Text="Sun" FontAttributes="Bold" HorizontalOptions="Center" />
+                    <Label Grid.Column="1" Text="Mon" FontAttributes="Bold" HorizontalOptions="Center" />
+                    <Label Grid.Column="2" Text="Tue" FontAttributes="Bold" HorizontalOptions="Center" />
+                    <Label Grid.Column="3" Text="Wed" FontAttributes="Bold" HorizontalOptions="Center" />
+                    <Label Grid.Column="4" Text="Thu" FontAttributes="Bold" HorizontalOptions="Center" />
+                    <Label Grid.Column="5" Text="Fri" FontAttributes="Bold" HorizontalOptions="Center" />
+                    <Label Grid.Column="6" Text="Sat" FontAttributes="Bold" HorizontalOptions="Center" />
+                </Grid>
+
+                <!-- Calendar Days -->
+                <CollectionView ItemsSource="{Binding CalendarDays}"
+                                SelectionMode="None">
+                    
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Vertical" 
+                                         Span="7" 
+                                         HorizontalItemSpacing="2" 
+                                         VerticalItemSpacing="2" />
+                    </CollectionView.ItemsLayout>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="viewmodels:CalendarDay">
+                            <Border BackgroundColor="{Binding BackgroundColor}"
+                                    StrokeThickness="1"
+                                    Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                                    StrokeShape="RoundRectangle 8"
+                                    HeightRequest="50"
+                                    Margin="1">
+                                
+                                <Grid>
+                                    <!-- Day Number -->
+                                    <Label Text="{Binding DayNumber}"
+                                           FontSize="16"
+                                           FontAttributes="{Binding IsToday, Converter={StaticResource BoolToFontAttributesConverter}}"
+                                           TextColor="{Binding TextColor}"
+                                           HorizontalOptions="Center"
+                                           VerticalOptions="Center" />
+
+                                    <!-- Booking Start Indicator -->
+                                    <Label Text="📅"
+                                           FontSize="10"
+                                           HorizontalOptions="Start"
+                                           VerticalOptions="Start"
+                                           Margin="2,2,0,0"
+                                           IsVisible="{Binding IsBookingStart}" />
+
+                                    <!-- Booking End Indicator -->
+                                    <Label Text="🏁"
+                                           FontSize="10"
+                                           HorizontalOptions="End"
+                                           VerticalOptions="Start"
+                                           Margin="0,2,2,0"
+                                           IsVisible="{Binding IsBookingEnd}" />
+
+                                    <!-- Booking Status Indicator -->
+                                    <Ellipse Fill="{Binding BookingStatus, Converter={StaticResource StatusToColorConverter}}"
+                                             WidthRequest="8"
+                                             HeightRequest="8"
+                                             HorizontalOptions="Center"
+                                             VerticalOptions="Start"
+                                             Margin="0,2,0,0"
+                                             IsVisible="{Binding IsBookingDay}" />
+
+                                    <!-- Booking Count -->
+                                    <Label Text="{Binding BookingCount}"
+                                           FontSize="10"
+                                           FontAttributes="Bold"
+                                           TextColor="White"
+                                           BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                                           WidthRequest="16"
+                                           HeightRequest="16"
+                                           HorizontalOptions="End"
+                                           VerticalOptions="End"
+                                           HorizontalTextAlignment="Center"
+                                           VerticalTextAlignment="Center"
+                                           Margin="0,0,2,2"
+                                           IsVisible="{Binding BookingCount, Converter={StaticResource CountToBoolConverter}}" />
+                                </Grid>
+                                
+                                <!-- Tap Gesture -->
+                                <Border.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:CalendarBookingViewModel}}, Path=SelectDateCommand}"
+                                                          CommandParameter="{Binding .}" />
+                                </Border.GestureRecognizers>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Calendar Legend -->
+                <Frame BackgroundColor="{AppThemeBinding Light={StaticResource Gray50}, Dark={StaticResource Gray800}}"
+                       BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                       CornerRadius="8"
+                       Padding="12"
+                       Margin="0,10">
+                    <StackLayout Spacing="8">
+                        <Label Text="Calendar Legend"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+
+                        <Grid ColumnDefinitions="Auto,*,Auto,*" RowDefinitions="Auto,Auto" ColumnSpacing="15" RowSpacing="5">
+                            <!-- Confirmed Bookings -->
+                            <Border Grid.Row="0" Grid.Column="0"
+                                    BackgroundColor="#C8E6C9"
+                                    StrokeThickness="1"
+                                    Stroke="#4CAF50"
+                                    StrokeShape="RoundRectangle 4"
+                                    WidthRequest="20"
+                                    HeightRequest="20" />
+                            <Label Grid.Row="0" Grid.Column="1"
+                                   Text="Confirmed Bookings"
+                                   FontSize="12"
+                                   VerticalOptions="Center" />
+
+                            <!-- In Progress Bookings -->
+                            <Border Grid.Row="0" Grid.Column="2"
+                                    BackgroundColor="#BBDEFB"
+                                    StrokeThickness="1"
+                                    Stroke="#2196F3"
+                                    StrokeShape="RoundRectangle 4"
+                                    WidthRequest="20"
+                                    HeightRequest="20" />
+                            <Label Grid.Row="0" Grid.Column="3"
+                                   Text="In Progress"
+                                   FontSize="12"
+                                   VerticalOptions="Center" />
+
+                            <!-- Completed Bookings -->
+                            <Border Grid.Row="1" Grid.Column="0"
+                                    BackgroundColor="#D1C4E9"
+                                    StrokeThickness="1"
+                                    Stroke="#9C27B0"
+                                    StrokeShape="RoundRectangle 4"
+                                    WidthRequest="20"
+                                    HeightRequest="20" />
+                            <Label Grid.Row="1" Grid.Column="1"
+                                   Text="Completed"
+                                   FontSize="12"
+                                   VerticalOptions="Center" />
+
+                            <!-- Legend Icons -->
+                            <StackLayout Grid.Row="1" Grid.Column="2" Grid.ColumnSpan="2" Orientation="Horizontal" Spacing="15">
+                                <StackLayout Orientation="Horizontal" Spacing="5">
+                                    <Label Text="📅" FontSize="12" />
+                                    <Label Text="Start" FontSize="12" />
+                                </StackLayout>
+                                <StackLayout Orientation="Horizontal" Spacing="5">
+                                    <Label Text="🏁" FontSize="12" />
+                                    <Label Text="End" FontSize="12" />
+                                </StackLayout>
+                            </StackLayout>
+                        </Grid>
+                    </StackLayout>
+                </Frame>
+
+                <!-- Selected Date Range Display -->
+                <Frame BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                       IsVisible="{Binding StartDate, Converter={StaticResource ObjectToBoolConverter}}"
+                       CornerRadius="8"
+                       Padding="15"
+                       Margin="0,10">
+                    <StackLayout Orientation="Horizontal" Spacing="10">
+                        <Label Text="📅" FontSize="20" VerticalOptions="Center" />
+                        <StackLayout>
+                            <Label Text="Selected Dates" 
+                                   FontSize="14" 
+                                   FontAttributes="Bold" 
+                                   TextColor="White" />
+                            <Label Text="{Binding StartDate, StringFormat='{0:MMM dd, yyyy}'}" 
+                                   FontSize="12" 
+                                   TextColor="White" 
+                                   Opacity="0.9" />
+                            <Label Text="{Binding EndDate, StringFormat='to {0:MMM dd, yyyy}'}" 
+                                   FontSize="12" 
+                                   TextColor="White" 
+                                   Opacity="0.9"
+                                   IsVisible="{Binding EndDate, Converter={StaticResource ObjectToBoolConverter}}" />
+                        </StackLayout>
+                        <Button Text="✕"
+                                Command="{Binding ClearSelectionCommand}"
+                                BackgroundColor="Transparent"
+                                TextColor="White"
+                                FontSize="16"
+                                HorizontalOptions="EndAndExpand"
+                                Padding="8" />
+                    </StackLayout>
+                </Frame>
+
+                <!-- Booking Details for Sitters -->
+                <Frame BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}"
+                       BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                       IsVisible="{Binding ShowBookingDetails}"
+                       CornerRadius="10"
+                       Padding="15"
+                       Margin="0,10">
+                    
+                    <StackLayout Spacing="10">
+                        <Label Text="{Binding SelectedDay, StringFormat='Bookings for {0:MMM dd, yyyy}'}"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                        
+                        <CollectionView ItemsSource="{Binding DayBookings}"
+                                        SelectionMode="None">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate x:DataType="models:Booking">
+                                    <Border BackgroundColor="{AppThemeBinding Light={StaticResource Gray50}, Dark={StaticResource Gray800}}"
+                                            StrokeThickness="1"
+                                            Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}"
+                                            StrokeShape="RoundRectangle 8"
+                                            Padding="12"
+                                            Margin="0,2">
+                                        
+                                        <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto,Auto">
+                                            <Label Grid.Row="0" Grid.Column="0"
+                                                   Text="{Binding PetCareRequest.Pet.Name}"
+                                                   FontSize="14"
+                                                   FontAttributes="Bold" />
+                                            
+                                            <Label Grid.Row="0" Grid.Column="1"
+                                                   Text="{Binding Status}"
+                                                   FontSize="12"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{Binding Status, Converter={StaticResource StatusToColorConverter}}" />
+                                            
+                                            <Label Grid.Row="1" Grid.ColumnSpan="2"
+                                                   Text="{Binding PetCareRequest.Title}"
+                                                   FontSize="12"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                                            
+                                            <Label Grid.Row="2" Grid.ColumnSpan="2"
+                                                   Text="{Binding Owner.FullName, StringFormat='Owner: {0}'}"
+                                                   FontSize="12"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                                        </Grid>
+                                        
+                                        <Border.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:CalendarBookingViewModel}}, Path=ViewBookingDetailsCommand}"
+                                                                  CommandParameter="{Binding .}" />
+                                        </Border.GestureRecognizers>
+                                    </Border>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </StackLayout>
+                </Frame>
+            </StackLayout>
+        </ScrollView>
+
+        <!-- Action Buttons -->
+        <Grid Grid.Row="3" 
+              ColumnDefinitions="*,*" 
+              ColumnSpacing="10" 
+              Padding="15,10"
+              BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}"
+              IsVisible="{Binding EndDate, Converter={StaticResource ObjectToBoolConverter}}">
+            
+            <Button Grid.Column="0"
+                    Text="Clear"
+                    Command="{Binding ClearSelectionCommand}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                    TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark=White}" />
+            
+            <Button Grid.Column="1"
+                    Text="Create Booking"
+                    Command="{Binding NavigateToCreateBookingCommand}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                    TextColor="White" />
+        </Grid>
+
+        <!-- Loading Indicator -->
+        <ActivityIndicator Grid.Row="2"
+                           IsVisible="{Binding IsBusy}"
+                           IsRunning="{Binding IsBusy}"
+                           Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+    </Grid>
+
+</ContentPage>

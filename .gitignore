@@ -1,0 +1,51 @@
+# General
+.DS_Store
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+
+# NuGet Packages
+*.nupkg
+
+# VS Code
+.vscode/
+
+# Rider
+.idea/
+
+# User-specific files
+appsettings.Development.json
+
+# Local development environment
+.env
+.env.local
+
+# MSTest test Results
+[Tt]est[Rr]esult*
+[Bb]uild[Ll]og.*
+
+# Ignore local development certificates
+*-shm
+*-wal
+
+# Compiled source
+*.com
+*.class
+*.dll
+*.exe
+*.pdb
+*.cache
+*.ilk

@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="PetSitterConnect.Views.AddPetPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:PetSitterConnect.ViewModels"
+             xmlns:models="clr-namespace:PetSitterConnect.Models"
+             x:DataType="viewmodels:AddPetViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="15">
+            
+            <!-- Pet Name -->
+            <StackLayout Spacing="5">
+                <Label Text="Pet Name *" FontSize="16" FontAttributes="Bold" />
+                <Entry Text="{Binding Name}"
+                       Placeholder="Enter your pet's name" />
+            </StackLayout>
+
+            <!-- Pet Type -->
+            <StackLayout Spacing="5">
+                <Label Text="Pet Type *" FontSize="16" FontAttributes="Bold" />
+                <Picker ItemsSource="{Binding PetTypes}"
+                        SelectedItem="{Binding Type}"
+                        Title="Select pet type" />
+            </StackLayout>
+
+            <!-- Breed -->
+            <StackLayout Spacing="5">
+                <Label Text="Breed" FontSize="16" FontAttributes="Bold" />
+                <Entry Text="{Binding Breed}"
+                       Placeholder="e.g., Golden Retriever, Persian" />
+            </StackLayout>
+
+            <!-- Age and Gender -->
+            <Grid ColumnDefinitions="*,10,*" RowDefinitions="Auto,Auto">
+                <StackLayout Grid.Column="0" Spacing="5">
+                    <Label Text="Age (years)" FontSize="16" FontAttributes="Bold" />
+                    <Entry Text="{Binding Age}"
+                           Placeholder="Age"
+                           Keyboard="Numeric" />
+                </StackLayout>
+                <StackLayout Grid.Column="2" Spacing="5">
+                    <Label Text="Gender" FontSize="16" FontAttributes="Bold" />
+                    <Picker ItemsSource="{Binding Genders}"
+                            SelectedItem="{Binding Gender}"
+                            Title="Select gender" />
+                </StackLayout>
+            </Grid>
+
+            <!-- Weight and Size -->
+            <Grid ColumnDefinitions="*,10,*" RowDefinitions="Auto,Auto">
+                <StackLayout Grid.Column="0" Spacing="5">
+                    <Label Text="Weight (kg)" FontSize="16" FontAttributes="Bold" />
+                    <Entry Text="{Binding Weight}"
+                           Placeholder="Weight"
+                           Keyboard="Numeric" />
+                </StackLayout>
+                <StackLayout Grid.Column="2" Spacing="5">
+                    <Label Text="Size" FontSize="16" FontAttributes="Bold" />
+                    <Picker ItemsSource="{Binding Sizes}"
+                            SelectedItem="{Binding Size}"
+                            Title="Select size" />
+                </StackLayout>
+            </Grid>
+
+            <!-- Description -->
+            <StackLayout Spacing="5">
+                <Label Text="Description" FontSize="16" FontAttributes="Bold" />
+                <Editor Text="{Binding Description}"
+                        Placeholder="Describe your pet's personality and behavior..."
+                        HeightRequest="80" />
+            </StackLayout>
+
+            <!-- Special Needs -->
+            <StackLayout Spacing="5">
+                <Label Text="Special Needs" FontSize="16" FontAttributes="Bold" />
+                <Editor Text="{Binding SpecialNeeds}"
+                        Placeholder="Any special care requirements..."
+                        HeightRequest="60" />
+            </StackLayout>
+
+            <!-- Medical Information -->
+            <Label Text="Medical Information" 
+                   FontSize="18" 
+                   FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                   Margin="0,10,0,0" />
+
+            <!-- Medical Conditions -->
+            <StackLayout Spacing="5">
+                <Label Text="Medical Conditions" FontSize="16" FontAttributes="Bold" />
+                <Editor Text="{Binding MedicalConditions}"
+                        Placeholder="Any known medical conditions..."
+                        HeightRequest="60" />
+            </StackLayout>
+
+            <!-- Medications -->
+            <StackLayout Spacing="5">
+                <Label Text="Medications" FontSize="16" FontAttributes="Bold" />
+                <Editor Text="{Binding Medications}"
+                        Placeholder="Current medications and dosage..."
+                        HeightRequest="60" />
+            </StackLayout>
+
+            <!-- Feeding Instructions -->
+            <StackLayout Spacing="5">
+                <Label Text="Feeding Instructions" FontSize="16" FontAttributes="Bold" />
+                <Editor Text="{Binding FeedingInstructions}"
+                        Placeholder="Feeding schedule and dietary requirements..."
+                        HeightRequest="60" />
+            </StackLayout>
+
+            <!-- Checkboxes -->
+            <Label Text="Pet Characteristics" 
+                   FontSize="18" 
+                   FontAttributes="Bold"
+                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                   Margin="0,10,0,0" />
+
+            <StackLayout Spacing="10">
+                <StackLayout Orientation="Horizontal" Spacing="10">
+                    <CheckBox IsChecked="{Binding IsVaccinated}" />
+                    <Label Text="Vaccinated" VerticalOptions="Center" />
+                </StackLayout>
+
+                <StackLayout Orientation="Horizontal" Spacing="10">
+                    <CheckBox IsChecked="{Binding IsNeutered}" />
+                    <Label Text="Spayed/Neutered" VerticalOptions="Center" />
+                </StackLayout>
+
+                <StackLayout Orientation="Horizontal" Spacing="10">
+                    <CheckBox IsChecked="{Binding IsFriendlyWithOtherPets}" />
+                    <Label Text="Friendly with other pets" VerticalOptions="Center" />
+                </StackLayout>
+
+                <StackLayout Orientation="Horizontal" Spacing="10">
+                    <CheckBox IsChecked="{Binding IsFriendlyWithChildren}" />
+                    <Label Text="Friendly with children" VerticalOptions="Center" />
+                </StackLayout>
+            </StackLayout>
+
+            <!-- Error Message -->
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="Red"
+                   FontSize="14"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}" />
+
+            <!-- Buttons -->
+            <Grid ColumnDefinitions="*,10,*" Margin="0,20,0,0">
+                <Button Grid.Column="0"
+                        Text="Cancel"
+                        Command="{Binding CancelCommand}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                        TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark=White}" />
+                
+                <Button Grid.Column="2"
+                        Text="Save Pet"
+                        Command="{Binding SavePetCommand}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                        TextColor="White"
+                        IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" />
+            </Grid>
+
+            <!-- Activity Indicator -->
+            <ActivityIndicator IsVisible="{Binding IsBusy}"
+                               IsRunning="{Binding IsBusy}"
+                               Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+
+        </StackLayout>
+    </ScrollView>
+
+</ContentPage>

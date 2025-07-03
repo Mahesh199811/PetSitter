@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="PetSitterConnect.Views.PetCareRequestDetailPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:PetSitterConnect.ViewModels"
+             xmlns:models="clr-namespace:PetSitterConnect.Models"
+             x:DataType="viewmodels:PetCareRequestDetailViewModel"
+             Title="{Binding Title}">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        
+        <!-- User Role Header -->
+        <Border Grid.Row="0" 
+                BackgroundColor="{Binding UserRoleColor}"
+                StrokeThickness="0"
+                Padding="15,10">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Label Grid.Column="0"
+                       Text="{Binding UserRoleIcon}" 
+                       FontSize="20" 
+                       VerticalOptions="Center" />
+                <StackLayout Grid.Column="1" 
+                             Orientation="Vertical" 
+                             Spacing="2"
+                             Margin="10,0,0,0">
+                    <Label Text="{Binding CurrentUser.FullName}" 
+                           FontSize="16" 
+                           FontAttributes="Bold" 
+                           TextColor="White" />
+                    <Label Text="{Binding ApplicationStatus}" 
+                           FontSize="12" 
+                           TextColor="White" 
+                           Opacity="0.9" />
+                </StackLayout>
+                <Border Grid.Column="2" 
+                        BackgroundColor="White" 
+                        StrokeThickness="0"
+                        Padding="8,4" 
+                        StrokeShape="RoundRectangle 12">
+                    <Label Text="{Binding UserRoleLabel}" 
+                           FontSize="10" 
+                           FontAttributes="Bold" 
+                           TextColor="{Binding UserRoleColor}" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Request Details -->
+        <ScrollView Grid.Row="1" Padding="15">
+            <StackLayout Spacing="20">
+                
+                <!-- Request Title -->
+                <Border BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}"
+                        Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                        StrokeThickness="1"
+                        Padding="20"
+                        StrokeShape="RoundRectangle 12">
+                    
+                    <StackLayout Spacing="10">
+                        <Label Text="{Binding PetCareRequest.Title}"
+                               FontSize="20"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                        
+                        <Label Text="{Binding PetCareRequest.Description}"
+                               FontSize="14"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                               LineBreakMode="WordWrap" />
+                    </StackLayout>
+                </Border>
+
+                <!-- Pet Information -->
+                <Border BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}"
+                        Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                        StrokeThickness="1"
+                        Padding="20"
+                        StrokeShape="RoundRectangle 12">
+                    
+                    <StackLayout Spacing="15">
+                        <Label Text="🐾 Pet Information"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                        
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="15" RowSpacing="8">
+                            <Label Grid.Row="0" Grid.Column="0" Text="Name:" FontAttributes="Bold" />
+                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding PetCareRequest.Pet.Name}" />
+                            
+                            <Label Grid.Row="1" Grid.Column="0" Text="Breed:" FontAttributes="Bold" />
+                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding PetCareRequest.Pet.Breed}" />
+                            
+                            <Label Grid.Row="2" Grid.Column="0" Text="Age:" FontAttributes="Bold" />
+                            <Label Grid.Row="2" Grid.Column="1" Text="{Binding PetCareRequest.Pet.Age, StringFormat='{0} years'}" />
+                            
+                            <Label Grid.Row="3" Grid.Column="0" Text="Size:" FontAttributes="Bold" />
+                            <Label Grid.Row="3" Grid.Column="1" Text="{Binding PetCareRequest.Pet.Size}" />
+                        </Grid>
+                        
+                        <Label Text="{Binding PetCareRequest.Pet.SpecialNeeds, StringFormat='Special Needs: {0}'}"
+                               FontSize="12"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                               IsVisible="{Binding PetCareRequest.Pet.SpecialNeeds, Converter={StaticResource StringToBoolConverter}}" />
+                    </StackLayout>
+                </Border>
+
+                <!-- Booking Details -->
+                <Border BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}"
+                        Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                        StrokeThickness="1"
+                        Padding="20"
+                        StrokeShape="RoundRectangle 12">
+                    
+                    <StackLayout Spacing="15">
+                        <Label Text="📅 Booking Details"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                        
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto,Auto,Auto" ColumnSpacing="15" RowSpacing="8">
+                            <Label Grid.Row="0" Grid.Column="0" Text="Care Type:" FontAttributes="Bold" />
+                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding PetCareRequest.CareType}" />
+                            
+                            <Label Grid.Row="1" Grid.Column="0" Text="Start Date:" FontAttributes="Bold" />
+                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding PetCareRequest.StartDate, StringFormat='{0:MMM dd, yyyy}'}" />
+                            
+                            <Label Grid.Row="2" Grid.Column="0" Text="End Date:" FontAttributes="Bold" />
+                            <Label Grid.Row="2" Grid.Column="1" Text="{Binding PetCareRequest.EndDate, StringFormat='{0:MMM dd, yyyy}'}" />
+                            
+                            <Label Grid.Row="3" Grid.Column="0" Text="Budget:" FontAttributes="Bold" />
+                            <Label Grid.Row="3" Grid.Column="1" 
+                                   Text="{Binding PetCareRequest.Budget, StringFormat='${0:F2}'}"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                        </Grid>
+                        
+                        <Label Text="{Binding PetCareRequest.Location, StringFormat='📍 {0}'}"
+                               FontSize="14"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                    </StackLayout>
+                </Border>
+
+                <!-- Pet Owner Information -->
+                <Border BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}"
+                        Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                        StrokeThickness="1"
+                        Padding="20"
+                        StrokeShape="RoundRectangle 12"
+                        IsVisible="{Binding ShowSitterActions}">
+                    
+                    <StackLayout Spacing="15">
+                        <Label Text="👤 Pet Owner"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                        
+                        <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" ColumnSpacing="15" RowSpacing="8">
+                            <Label Grid.Row="0" Grid.Column="0" Text="Name:" FontAttributes="Bold" />
+                            <Label Grid.Row="0" Grid.Column="1" Text="{Binding PetCareRequest.Owner.FullName}" />
+                            
+                            <Label Grid.Row="1" Grid.Column="0" Text="Email:" FontAttributes="Bold" />
+                            <Label Grid.Row="1" Grid.Column="1" Text="{Binding PetCareRequest.Owner.Email}" />
+                        </Grid>
+                    </StackLayout>
+                </Border>
+
+                <!-- Application Notes (for sitters) -->
+                <Border BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}"
+                        Stroke="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                        StrokeThickness="1"
+                        Padding="20"
+                        StrokeShape="RoundRectangle 12"
+                        IsVisible="{Binding ShowSitterActions}">
+                    
+                    <StackLayout Spacing="15">
+                        <Label Text="📝 Application Notes (Optional)"
+                               FontSize="16"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                        
+                        <Editor Text="{Binding ApplicationNotes}"
+                                Placeholder="Tell the pet owner why you're the perfect sitter for their pet..."
+                                HeightRequest="100"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Gray50}, Dark={StaticResource Gray800}}" />
+                    </StackLayout>
+                </Border>
+
+                <!-- Error Message -->
+                <Label Text="{Binding ErrorMessage}"
+                       TextColor="Red"
+                       FontSize="14"
+                       IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+                       HorizontalTextAlignment="Center" />
+
+            </StackLayout>
+        </ScrollView>
+
+        <!-- Action Buttons -->
+        <Grid Grid.Row="2" 
+              ColumnDefinitions="*,*" 
+              ColumnSpacing="10" 
+              Padding="15,10"
+              BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}"
+              IsVisible="{Binding ShowSitterActions}">
+            
+            <!-- Chat Button (if application accepted) -->
+            <Button Grid.Column="0"
+                    Text="💬 Chat"
+                    Command="{Binding OpenChatCommand}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource SecondaryDark}}"
+                    TextColor="White"
+                    IsVisible="{Binding ExistingBooking.Status, Converter={StaticResource BookingStatusToChatVisibilityConverter}}" />
+            
+            <!-- Main Action Button -->
+            <Button Grid.Column="1"
+                    Text="{Binding ActionButtonText}"
+                    Command="{Binding ApplyForRequestCommand}"
+                    BackgroundColor="{Binding ActionButtonColor}"
+                    TextColor="White"
+                    IsEnabled="{Binding CanApply}" />
+        </Grid>
+
+        <!-- Loading Indicator -->
+        <ActivityIndicator Grid.Row="1"
+                           IsVisible="{Binding IsBusy}"
+                           IsRunning="{Binding IsBusy}"
+                           Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+    </Grid>
+
+</ContentPage>

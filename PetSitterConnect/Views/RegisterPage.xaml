@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="PetSitterConnect.Views.RegisterPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:PetSitterConnect.ViewModels"
+             xmlns:models="clr-namespace:PetSitterConnect.Models"
+             x:DataType="viewmodels:RegisterViewModel"
+             Title="{Binding Title}"
+             Shell.NavBarIsVisible="False">
+
+    <ScrollView>
+        <Grid RowDefinitions="Auto,*,Auto" Style="{StaticResource PetCoolGradientBackground}">
+
+            <!-- Header -->
+            <Border Grid.Row="0" Style="{StaticResource PetCardFrame}" Margin="20,20,20,15">
+                <StackLayout Spacing="12">
+                    <Image Source="pet_logo.svg"
+                           HeightRequest="100"
+                           WidthRequest="100"
+                           HorizontalOptions="Center" />
+                    <Label Text="🐾 Join Our Pet Family"
+                           Style="{StaticResource PetHeaderLabel}" />
+                    <Label Text="Create your account to connect with loving pet care"
+                           Style="{StaticResource PetSubHeaderLabel}" />
+                </StackLayout>
+            </Border>
+
+            <!-- Registration Form -->
+            <Border Grid.Row="1" Style="{StaticResource PetCardFrame}" Margin="20,5">
+                <StackLayout Spacing="20">
+
+                    <!-- Personal Information -->
+                    <Label Text="👤 Personal Information"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+
+                    <!-- Name Fields -->
+                    <Grid ColumnDefinitions="*,10,*">
+                        <StackLayout Grid.Column="0" Spacing="8">
+                            <Label Text="First Name"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                            <Border BackgroundColor="{AppThemeBinding Light={StaticResource PetSurface}, Dark={StaticResource PetSurfaceDark}}"
+                                    Stroke="{AppThemeBinding Light={StaticResource PetAccent2}, Dark={StaticResource Gray600}}"
+                                    StrokeThickness="2"
+                                    StrokeShape="RoundRectangle 10"
+                                    Padding="12,8">
+                                <Entry Text="{Binding FirstName}"
+                                       Placeholder="First name"
+                                       BackgroundColor="Transparent"/>
+                            </Border>
+                        </StackLayout>
+                        <StackLayout Grid.Column="2" Spacing="8">
+                            <Label Text="Last Name"
+                                   FontSize="14"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                            <Border BackgroundColor="{AppThemeBinding Light={StaticResource PetSurface}, Dark={StaticResource PetSurfaceDark}}"
+                                    Stroke="{AppThemeBinding Light={StaticResource PetAccent2}, Dark={StaticResource Gray600}}"
+                                    StrokeThickness="2"
+                                    StrokeShape="RoundRectangle 10"
+                                    Padding="12,8">
+                                <Entry Text="{Binding LastName}"
+                                       Placeholder="Last name"
+                                       BackgroundColor="Transparent" />
+                            </Border>
+                        </StackLayout>
+                    </Grid>
+
+                    <!-- Email -->
+                    <StackLayout Spacing="8">
+                        <Label Text="📧 Email"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource PetSurface}, Dark={StaticResource PetSurfaceDark}}"
+                                Stroke="{AppThemeBinding Light={StaticResource PetAccent2}, Dark={StaticResource Gray600}}"
+                                StrokeThickness="2"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="12,8">
+                            <Entry Text="{Binding Email}"
+                                   Placeholder="Enter your email"
+                                   Keyboard="Email"
+                                   BackgroundColor="Transparent" />
+                        </Border>
+                    </StackLayout>
+
+                    <!-- Password Fields -->
+                    <StackLayout Spacing="8">
+                        <Label Text="🔒 Password"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource PetSurface}, Dark={StaticResource PetSurfaceDark}}"
+                                Stroke="{AppThemeBinding Light={StaticResource PetAccent2}, Dark={StaticResource Gray600}}"
+                                StrokeThickness="2"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="12,8">
+                            <Entry Text="{Binding Password}"
+                                   Placeholder="Create a password"
+                                   IsPassword="True"
+                                   BackgroundColor="Transparent" />
+                        </Border>
+                    </StackLayout>
+
+                    <StackLayout Spacing="8">
+                        <Label Text="🔒 Confirm Password"
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource PetSurface}, Dark={StaticResource PetSurfaceDark}}"
+                                Stroke="{AppThemeBinding Light={StaticResource PetAccent2}, Dark={StaticResource Gray600}}"
+                                StrokeThickness="2"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="12,8">
+                            <Entry Text="{Binding ConfirmPassword}"
+                                   Placeholder="Confirm your password"
+                                   IsPassword="True"
+                                   BackgroundColor="Transparent" />
+                        </Border>
+                    </StackLayout>
+
+                    <!-- User Type -->
+                    <StackLayout Spacing="8">
+                        <Label Text="🐕 I am a..."
+                               FontSize="14"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource PetSurface}, Dark={StaticResource PetSurfaceDark}}"
+                                Stroke="{AppThemeBinding Light={StaticResource PetAccent2}, Dark={StaticResource Gray600}}"
+                                StrokeThickness="2"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="12,8">
+                            <Picker ItemsSource="{Binding UserTypes}"
+                                    SelectedItem="{Binding UserType}"
+                                    Title="Select your role"
+                                    BackgroundColor="Transparent" />
+                        </Border>
+                    </StackLayout>
+
+                    <!-- Contact Information -->
+                    <Label Text="📍 Contact Information (Optional)"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource SecondaryDark}}"
+                           Margin="0,15,0,0" />
+
+                    <!-- Phone -->
+                    <StackLayout Spacing="8">
+                        <Label Text="📱 Phone Number"
+                               FontSize="14"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource PetSurface}, Dark={StaticResource PetSurfaceDark}}"
+                                Stroke="{AppThemeBinding Light={StaticResource PetAccent3}, Dark={StaticResource Gray600}}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="12,8">
+                            <Entry Text="{Binding PhoneNumber}"
+                                   Placeholder="Phone number"
+                                   Keyboard="Telephone"
+                                   BackgroundColor="Transparent" />
+                        </Border>
+                    </StackLayout>
+
+                    <!-- Address -->
+                    <StackLayout Spacing="8">
+                        <Label Text="🏠 Address"
+                               FontSize="14"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource PetSurface}, Dark={StaticResource PetSurfaceDark}}"
+                                Stroke="{AppThemeBinding Light={StaticResource PetAccent3}, Dark={StaticResource Gray600}}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="12,8">
+                            <Entry Text="{Binding Address}"
+                                   Placeholder="Street address"
+                                   BackgroundColor="Transparent" />
+                        </Border>
+                    </StackLayout>
+
+                    <!-- City and Postal Code -->
+                    <Grid ColumnDefinitions="*,10,*">
+                        <StackLayout Grid.Column="0" Spacing="8">
+                            <Label Text="🏙️ City"
+                                   FontSize="14"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                            <Border BackgroundColor="{AppThemeBinding Light={StaticResource PetSurface}, Dark={StaticResource PetSurfaceDark}}"
+                                    Stroke="{AppThemeBinding Light={StaticResource PetAccent3}, Dark={StaticResource Gray600}}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 10"
+                                    Padding="12,8">
+                                <Entry Text="{Binding City}"
+                                       Placeholder="City"
+                                       BackgroundColor="Transparent" />
+                            </Border>
+                        </StackLayout>
+                        <StackLayout Grid.Column="2" Spacing="8">
+                            <Label Text="📮 Postal Code"
+                                   FontSize="14"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                            <Border BackgroundColor="{AppThemeBinding Light={StaticResource PetSurface}, Dark={StaticResource PetSurfaceDark}}"
+                                    Stroke="{AppThemeBinding Light={StaticResource PetAccent3}, Dark={StaticResource Gray600}}"
+                                    StrokeThickness="1"
+                                    StrokeShape="RoundRectangle 10"
+                                    Padding="12,8">
+                                <Entry Text="{Binding PostalCode}"
+                                       Placeholder="Postal code"
+                                       BackgroundColor="Transparent" />
+                            </Border>
+                        </StackLayout>
+                    </Grid>
+
+                    <!-- Country -->
+                    <StackLayout Spacing="8">
+                        <Label Text="🌍 Country"
+                               FontSize="14"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                        <Border BackgroundColor="{AppThemeBinding Light={StaticResource PetSurface}, Dark={StaticResource PetSurfaceDark}}"
+                                Stroke="{AppThemeBinding Light={StaticResource PetAccent3}, Dark={StaticResource Gray600}}"
+                                StrokeThickness="1"
+                                StrokeShape="RoundRectangle 10"
+                                Padding="12,8">
+                            <Entry Text="{Binding Country}"
+                                   Placeholder="Country"
+                                   BackgroundColor="Transparent" />
+                        </Border>
+                    </StackLayout>
+
+                    <!-- Terms and Conditions -->
+                    <Border BackgroundColor="{AppThemeBinding Light={StaticResource PetAccent1}, Dark={StaticResource PetSurfaceDark}}"
+                            Stroke="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 12"
+                            Padding="15"
+                            Margin="0,20,0,0">
+                        <StackLayout Orientation="Horizontal" Spacing="12">
+                            <CheckBox IsChecked="{Binding AcceptTerms}"
+                                      Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                            <Label Text="I agree to the Terms and Conditions and Privacy Policy for pet care services"
+                                   VerticalOptions="Center"
+                                   FontSize="13"
+                                   TextColor="{AppThemeBinding Light={StaticResource Gray700}, Dark={StaticResource Gray200}}" />
+                        </StackLayout>
+                    </Border>
+
+                    <!-- Error Message -->
+                    <Border BackgroundColor="#FFEBEE"
+                            Stroke="#F44336"
+                            StrokeThickness="1"
+                            StrokeShape="RoundRectangle 8"
+                            Padding="15,10"
+                            IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}">
+                        <Label Text="{Binding ErrorMessage}"
+                               TextColor="#D32F2F"
+                               FontSize="14" />
+                    </Border>
+
+                    <!-- Register Button -->
+                    <Button Text="🐾 Create My Account"
+                            Command="{Binding RegisterCommand}"
+                            Style="{StaticResource PetAccentButton}"
+                            FontSize="18"
+                            HeightRequest="55"
+                            Margin="0,20,0,0"
+                            IsEnabled="{Binding IsBusy, Converter={StaticResource InvertedBoolConverter}}" />
+
+                    <!-- Activity Indicator -->
+                    <ActivityIndicator IsVisible="{Binding IsBusy}"
+                                       IsRunning="{Binding IsBusy}" />
+
+                </StackLayout>
+            </Border>
+
+            <!-- Footer -->
+            <Border Grid.Row="2" Style="{StaticResource PetCardFrame}" Margin="20,5,20,20">
+                <StackLayout Spacing="15">
+                    <BoxView HeightRequest="2"
+                             BackgroundColor="{AppThemeBinding Light={StaticResource PetAccent3}, Dark={StaticResource Gray600}}"
+                             CornerRadius="1" />
+
+                    <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Spacing="8">
+                        <Label Text="Already part of our pet family? 🐱"
+                               FontSize="14"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                        <Button Text="Sign In"
+                                Command="{Binding NavigateToLoginCommand}"
+                                BackgroundColor="Transparent"
+                                TextColor="{AppThemeBinding Light={StaticResource Tertiary}, Dark={StaticResource TertiaryDark}}"
+                                FontSize="14"
+                                FontAttributes="Bold"
+                                Padding="8,4"
+                                CornerRadius="8" />
+                    </StackLayout>
+                </StackLayout>
+            </Border>
+
+        </Grid>
+    </ScrollView>
+
+</ContentPage>

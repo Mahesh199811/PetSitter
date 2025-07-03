@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="60" cy="60" r="55" fill="#FFF8F5" stroke="#FF8A65" stroke-width="3"/>
+  
+  <!-- Main pet silhouette (dog/cat) -->
+  <g fill="#FF8A65">
+    <!-- Head -->
+    <circle cx="60" cy="45" r="18"/>
+    
+    <!-- Ears -->
+    <ellipse cx="48" cy="32" rx="6" ry="12" transform="rotate(-20 48 32)"/>
+    <ellipse cx="72" cy="32" rx="6" ry="12" transform="rotate(20 72 32)"/>
+    
+    <!-- Body -->
+    <ellipse cx="60" cy="75" rx="15" ry="20"/>
+  </g>
+  
+  <!-- Heart above pet -->
+  <g fill="#F8BBD9">
+    <path d="M60 25c-2-2-8-4-8-8a4 4 0 0 1 8-2 4 4 0 0 1 8 2c0 4-6 6-8 8z"/>
+  </g>
+  
+  <!-- Paw prints around the pet -->
+  <g fill="#81C784" opacity="0.7">
+    <!-- Left paw -->
+    <ellipse cx="25" cy="50" rx="3" ry="2"/>
+    <ellipse cx="22" cy="46" rx="1.5" ry="1.5"/>
+    <ellipse cx="25" cy="45" rx="1.5" ry="1.5"/>
+    <ellipse cx="28" cy="46" rx="1.5" ry="1.5"/>
+    
+    <!-- Right paw -->
+    <ellipse cx="95" cy="70" rx="3" ry="2"/>
+    <ellipse cx="92" cy="66" rx="1.5" ry="1.5"/>
+    <ellipse cx="95" cy="65" rx="1.5" ry="1.5"/>
+    <ellipse cx="98" cy="66" rx="1.5" ry="1.5"/>
+    
+    <!-- Bottom paw -->
+    <ellipse cx="60" cy="100" rx="3" ry="2"/>
+    <ellipse cx="57" cy="96" rx="1.5" ry="1.5"/>
+    <ellipse cx="60" cy="95" rx="1.5" ry="1.5"/>
+    <ellipse cx="63" cy="96" rx="1.5" ry="1.5"/>
+  </g>
+  
+  <!-- Eyes -->
+  <g fill="#FFFFFF">
+    <circle cx="55" cy="42" r="2"/>
+    <circle cx="65" cy="42" r="2"/>
+  </g>
+  
+  <!-- Nose -->
+  <ellipse cx="60" cy="48" rx="1.5" ry="1" fill="#64B5F6"/>
+</svg>

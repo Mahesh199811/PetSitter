@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<?xaml-comp compile="true" ?>
+<ResourceDictionary 
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+
+    <!-- Note: For Android please see also Platforms\Android\Resources\values\colors.xml -->
+
+    <!-- Pet-Loving Primary Colors -->
+    <Color x:Key="Primary">#FF8A65</Color>          <!-- Warm coral orange - friendly and inviting -->
+    <Color x:Key="PrimaryDark">#FF7043</Color>      <!-- Slightly darker coral for dark theme -->
+    <Color x:Key="PrimaryDarkText">#FFFFFF</Color>  <!-- White text on primary -->
+
+    <!-- Pet-Loving Secondary Colors -->
+    <Color x:Key="Secondary">#81C784</Color>        <!-- Soft green - nature and care -->
+    <Color x:Key="SecondaryDark">#66BB6A</Color>    <!-- Darker green for dark theme -->
+    <Color x:Key="SecondaryDarkText">#FFFFFF</Color> <!-- White text on secondary -->
+
+    <!-- Pet-Loving Tertiary Colors -->
+    <Color x:Key="Tertiary">#64B5F6</Color>         <!-- Soft blue - trust and calm -->
+    <Color x:Key="TertiaryDark">#42A5F5</Color>     <!-- Darker blue for dark theme -->
+
+    <!-- Pet-Loving Accent Colors -->
+    <Color x:Key="PetAccent1">#FFAB91</Color>       <!-- Light peach - warmth -->
+    <Color x:Key="PetAccent2">#A5D6A7</Color>       <!-- Light green - nature -->
+    <Color x:Key="PetAccent3">#90CAF9</Color>       <!-- Light blue - serenity -->
+    <Color x:Key="PetAccent4">#F8BBD9</Color>       <!-- Soft pink - love and care -->
+
+    <!-- Pet-Loving Background Colors -->
+    <Color x:Key="PetBackground">#FFF8F5</Color>    <!-- Very light warm background -->
+    <Color x:Key="PetBackgroundDark">#2E2E2E</Color> <!-- Dark theme background -->
+    <Color x:Key="PetSurface">#FFFFFF</Color>       <!-- Card/surface color -->
+    <Color x:Key="PetSurfaceDark">#424242</Color>   <!-- Dark theme surface -->
+
+    <!-- Standard Colors -->
+    <Color x:Key="White">White</Color>
+    <Color x:Key="Black">Black</Color>
+    <Color x:Key="Magenta">#D600AA</Color>
+    <Color x:Key="MidnightBlue">#190649</Color>
+    <Color x:Key="OffBlack">#1f1f1f</Color>
+
+    <Color x:Key="Gray100">#E1E1E1</Color>
+    <Color x:Key="Gray200">#C8C8C8</Color>
+    <Color x:Key="Gray300">#ACACAC</Color>
+    <Color x:Key="Gray400">#919191</Color>
+    <Color x:Key="Gray500">#6E6E6E</Color>
+    <Color x:Key="Gray600">#404040</Color>
+    <Color x:Key="Gray900">#212121</Color>
+    <Color x:Key="Gray950">#141414</Color>
+
+    <!-- Pet-Themed Brushes -->
+    <SolidColorBrush x:Key="PrimaryBrush" Color="{StaticResource Primary}"/>
+    <SolidColorBrush x:Key="SecondaryBrush" Color="{StaticResource Secondary}"/>
+    <SolidColorBrush x:Key="TertiaryBrush" Color="{StaticResource Tertiary}"/>
+    <SolidColorBrush x:Key="WhiteBrush" Color="{StaticResource White}"/>
+    <SolidColorBrush x:Key="BlackBrush" Color="{StaticResource Black}"/>
+
+    <!-- Pet Accent Brushes -->
+    <SolidColorBrush x:Key="PetAccent1Brush" Color="{StaticResource PetAccent1}"/>
+    <SolidColorBrush x:Key="PetAccent2Brush" Color="{StaticResource PetAccent2}"/>
+    <SolidColorBrush x:Key="PetAccent3Brush" Color="{StaticResource PetAccent3}"/>
+    <SolidColorBrush x:Key="PetAccent4Brush" Color="{StaticResource PetAccent4}"/>
+
+    <!-- Pet Background Brushes -->
+    <SolidColorBrush x:Key="PetBackgroundBrush" Color="{StaticResource PetBackground}"/>
+    <SolidColorBrush x:Key="PetSurfaceBrush" Color="{StaticResource PetSurface}"/>
+
+    <!-- Gray Scale Brushes -->
+    <SolidColorBrush x:Key="Gray100Brush" Color="{StaticResource Gray100}"/>
+    <SolidColorBrush x:Key="Gray200Brush" Color="{StaticResource Gray200}"/>
+    <SolidColorBrush x:Key="Gray300Brush" Color="{StaticResource Gray300}"/>
+    <SolidColorBrush x:Key="Gray400Brush" Color="{StaticResource Gray400}"/>
+    <SolidColorBrush x:Key="Gray500Brush" Color="{StaticResource Gray500}"/>
+    <SolidColorBrush x:Key="Gray600Brush" Color="{StaticResource Gray600}"/>
+    <SolidColorBrush x:Key="Gray900Brush" Color="{StaticResource Gray900}"/>
+    <SolidColorBrush x:Key="Gray950Brush" Color="{StaticResource Gray950}"/>
+
+    <!-- Pet-Themed Gradients -->
+    <LinearGradientBrush x:Key="PetWarmGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="{StaticResource PetAccent1}" Offset="0.0" />
+        <GradientStop Color="{StaticResource Primary}" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="PetCoolGradient" StartPoint="0,0" EndPoint="1,1">
+        <GradientStop Color="{StaticResource Tertiary}" Offset="0.0" />
+        <GradientStop Color="{StaticResource Secondary}" Offset="1.0" />
+    </LinearGradientBrush>
+
+    <LinearGradientBrush x:Key="PetSoftGradient" StartPoint="0,0" EndPoint="0,1">
+        <GradientStop Color="{StaticResource PetBackground}" Offset="0.0" />
+        <GradientStop Color="{StaticResource PetAccent2}" Offset="1.0" />
+    </LinearGradientBrush>
+</ResourceDictionary>

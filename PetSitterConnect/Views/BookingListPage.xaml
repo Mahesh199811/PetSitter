@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="PetSitterConnect.Views.BookingListPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:PetSitterConnect.ViewModels"
+             xmlns:models="clr-namespace:PetSitterConnect.Models"
+             x:DataType="viewmodels:BookingListViewModel"
+             Title="{Binding Title}">
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*">
+
+        <!-- User Role Header -->
+        <Border Grid.Row="0"
+                Background="{StaticResource PetWarmGradient}"
+                StrokeThickness="0"
+                Padding="20,15"
+                StrokeShape="RoundRectangle 0,0,20,20">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Label Grid.Column="0"
+                       Text="🐾"
+                       FontSize="24"
+                       VerticalOptions="Center" />
+                <StackLayout Grid.Column="1"
+                             Orientation="Vertical"
+                             Spacing="3"
+                             Margin="15,0,0,0">
+                    <Label Text="{Binding CurrentUser.FullName}"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="White" />
+                    <Label Text="{Binding ShowAsSitter, Converter={StaticResource BoolToBookingModeConverter}}"
+                           FontSize="13"
+                           TextColor="White"
+                           Opacity="0.95" />
+                </StackLayout>
+                <Border Grid.Column="2"
+                        BackgroundColor="White"
+                        StrokeThickness="0"
+                        Padding="12,6"
+                        StrokeShape="RoundRectangle 15"
+                        Shadow="{StaticResource PetWarmGradient}">
+                    <Label Text="{Binding UserRoleLabel}"
+                           FontSize="11"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Header Controls -->
+        <Border Grid.Row="1" Style="{StaticResource PetCardFrame}" Margin="15,10">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="15">
+
+                <!-- Filter Picker -->
+                <Border Grid.Column="0"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource PetSurface}, Dark={StaticResource PetSurfaceDark}}"
+                        Stroke="{AppThemeBinding Light={StaticResource PetAccent2}, Dark={StaticResource Gray600}}"
+                        StrokeThickness="2"
+                        StrokeShape="RoundRectangle 12"
+                        Padding="15,10">
+                    <Picker ItemsSource="{Binding FilterOptions}"
+                            SelectedItem="{Binding SelectedFilter}"
+                            Title="🔍 Filter bookings"
+                            BackgroundColor="Transparent"
+                            TextColor="{AppThemeBinding Light={StaticResource Gray700}, Dark={StaticResource Gray200}}" />
+                </Border>
+
+                <!-- Toggle View Mode -->
+                <Button Grid.Column="1"
+                        Text="{Binding ShowAsSitter, Converter={StaticResource BoolToTextConverter}, ConverterParameter=BookingMode}"
+                        Command="{Binding ToggleViewModeCommand}"
+                        Style="{StaticResource PetAccentButton}"
+                        FontSize="12"
+                        Padding="15,10" />
+            </Grid>
+        </Border>
+
+        <!-- Results Count -->
+        <Label Grid.Row="2"
+               Text="{Binding FilteredBookings.Count, StringFormat='{0} bookings found'}"
+               FontSize="14"
+               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+               Margin="15,0,15,10" />
+
+        <!-- Bookings List -->
+        <RefreshView Grid.Row="3"
+                     IsRefreshing="{Binding IsRefreshing}"
+                     Command="{Binding RefreshCommand}">
+            
+            <CollectionView ItemsSource="{Binding FilteredBookings}"
+                            SelectionMode="None">
+                
+                <CollectionView.EmptyView>
+                    <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10">
+                        <Label Text="No bookings found"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center" />
+                        <Label Text="Your bookings will appear here"
+                               FontSize="14"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                               HorizontalOptions="Center" />
+                    </StackLayout>
+                </CollectionView.EmptyView>
+
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:Booking">
+                        <Grid Padding="15" RowDefinitions="Auto">
+                            
+                            <Border Grid.Row="0"
+                                    Style="{StaticResource PetCardFrame}"
+                                    Margin="5,8">
+                                
+                                <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" Padding="15">
+                                    
+                                    <!-- Header: Pet Name and Status -->
+                                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto">
+                                        <StackLayout Grid.Column="0" Orientation="Horizontal" Spacing="8">
+                                            <Label Text="🐕"
+                                                   FontSize="20"
+                                                   VerticalOptions="Center" />
+                                            <Label Text="{Binding PetCareRequest.Pet.Name}"
+                                                   FontSize="18"
+                                                   FontAttributes="Bold"
+                                                   TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                                                   VerticalOptions="Center" />
+                                        </StackLayout>
+
+                                        <Border Grid.Column="1"
+                                                BackgroundColor="{Binding Status, Converter={StaticResource StatusToColorConverter}}"
+                                                StrokeThickness="0"
+                                                StrokeShape="RoundRectangle 12"
+                                                Padding="12,6"
+                                                HorizontalOptions="End">
+                                            <Label Text="{Binding Status}"
+                                                   FontSize="12"
+                                                   FontAttributes="Bold"
+                                                   TextColor="White" />
+                                        </Border>
+                                    </Grid>
+                                    
+                                    <!-- Request Title -->
+                                    <Label Grid.Row="1"
+                                           Text="{Binding PetCareRequest.Title}"
+                                           FontSize="16"
+                                           TextColor="{AppThemeBinding Light={StaticResource Gray700}, Dark={StaticResource Gray200}}"
+                                           Margin="0,5,0,0" />
+                                    
+                                    <!-- Dates and Duration -->
+                                    <StackLayout Grid.Row="2" Orientation="Horizontal" Spacing="10" Margin="0,5">
+                                        <Label Text="{Binding PetCareRequest.StartDate, StringFormat='{0:MMM dd, yyyy}'}"
+                                               FontSize="14"
+                                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                                        <Label Text="-"
+                                               FontSize="14"
+                                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                                        <Label Text="{Binding PetCareRequest.EndDate, StringFormat='{0:MMM dd, yyyy}'}"
+                                               FontSize="14"
+                                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                                        <Label Text="{Binding PetCareRequest.DurationInDays, StringFormat='({0} days)'}"
+                                               FontSize="14"
+                                               TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}" />
+                                    </StackLayout>
+                                    
+                                    <!-- Amount and Care Type -->
+                                    <Grid Grid.Row="3" ColumnDefinitions="*,Auto" Margin="0,5">
+                                        <Label Grid.Column="0"
+                                               Text="{Binding PetCareRequest.CareType}"
+                                               FontSize="14"
+                                               TextColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource SecondaryDark}}" />
+                                        
+                                        <Label Grid.Column="1"
+                                               Text="{Binding TotalAmount, StringFormat='${0:F2}'}"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                                    </Grid>
+                                    
+                                    <!-- Action Buttons (Only for Pet Owners viewing applications) -->
+                                    <StackLayout Grid.Row="4" Orientation="Horizontal" Spacing="10" Margin="0,10,0,0">
+
+                                        <!-- Accept Button (Pet Owners only) -->
+                                        <Button Text="Accept"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:BookingListViewModel}}, Path=AcceptBookingCommand}"
+                                                CommandParameter="{Binding .}"
+                                                BackgroundColor="Green"
+                                                TextColor="White"
+                                                FontSize="12">
+                                            <Button.IsVisible>
+                                                <MultiBinding Converter="{StaticResource OwnerCanAcceptConverter}">
+                                                    <Binding Path="Status" />
+                                                    <Binding Source="{RelativeSource AncestorType={x:Type viewmodels:BookingListViewModel}}" Path="ShowAsSitter" />
+                                                </MultiBinding>
+                                            </Button.IsVisible>
+                                        </Button>
+
+                                        <!-- Reject Button (Pet Owners only) -->
+                                        <Button Text="Reject"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:BookingListViewModel}}, Path=RejectBookingCommand}"
+                                                CommandParameter="{Binding .}"
+                                                BackgroundColor="Red"
+                                                TextColor="White"
+                                                FontSize="12">
+                                            <Button.IsVisible>
+                                                <MultiBinding Converter="{StaticResource OwnerCanAcceptConverter}">
+                                                    <Binding Path="Status" />
+                                                    <Binding Source="{RelativeSource AncestorType={x:Type viewmodels:BookingListViewModel}}" Path="ShowAsSitter" />
+                                                </MultiBinding>
+                                            </Button.IsVisible>
+                                        </Button>
+
+                                        <!-- Cancel Button (Available to both, but different logic) -->
+                                        <Button Text="Cancel"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:BookingListViewModel}}, Path=CancelBookingCommand}"
+                                                CommandParameter="{Binding .}"
+                                                BackgroundColor="Orange"
+                                                TextColor="White"
+                                                FontSize="12"
+                                                IsVisible="{Binding CanBeCancelled}" />
+
+                                        <!-- Complete Button (Pet Sitters only) -->
+                                        <Button Text="Complete"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:BookingListViewModel}}, Path=CompleteBookingCommand}"
+                                                CommandParameter="{Binding .}"
+                                                BackgroundColor="DarkGreen"
+                                                TextColor="White"
+                                                FontSize="12">
+                                            <Button.IsVisible>
+                                                <MultiBinding Converter="{StaticResource SitterCanCompleteConverter}">
+                                                    <Binding Path="Status" />
+                                                    <Binding Source="{RelativeSource AncestorType={x:Type viewmodels:BookingListViewModel}}" Path="ShowAsSitter" />
+                                                </MultiBinding>
+                                            </Button.IsVisible>
+                                        </Button>
+                                    </StackLayout>
+                                </Grid>
+                            </Border>
+                            
+                            <!-- Tap Gesture -->
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:BookingListViewModel}}, Path=ViewBookingDetailsCommand}"
+                                                      CommandParameter="{Binding .}" />
+                            </Grid.GestureRecognizers>
+                        </Grid>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </RefreshView>
+
+        <!-- Loading Indicator -->
+        <ActivityIndicator Grid.Row="3"
+                           IsVisible="{Binding IsBusy}"
+                           IsRunning="{Binding IsBusy}"
+                           Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+    </Grid>
+
+</ContentPage>

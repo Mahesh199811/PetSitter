@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="PetSitterConnect.Views.ChatPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:PetSitterConnect.ViewModels"
+             xmlns:models="clr-namespace:PetSitterConnect.Models"
+             x:DataType="viewmodels:ChatViewModel"
+             Title="{Binding ChatTitle}">
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        
+        <!-- Chat Header -->
+        <Border Grid.Row="0"
+                Background="{StaticResource PetWarmGradient}"
+                StrokeThickness="0"
+                Padding="20,15"
+                StrokeShape="RoundRectangle 0,0,20,20">
+            <Grid ColumnDefinitions="Auto,*,Auto">
+                <Label Grid.Column="0"
+                       Text="🐾"
+                       FontSize="22"
+                       VerticalOptions="Center" />
+                <StackLayout Grid.Column="1"
+                             Orientation="Vertical"
+                             Spacing="3"
+                             Margin="15,0,0,0">
+                    <Label Text="{Binding OtherParticipantName}"
+                           FontSize="17"
+                           FontAttributes="Bold"
+                           TextColor="White" />
+                    <Label Text="{Binding Booking.PetCareRequest.Pet.Name, StringFormat='💕 Care for {0}'}"
+                           FontSize="13"
+                           TextColor="White"
+                           Opacity="0.95" />
+                </StackLayout>
+                <Border Grid.Column="2"
+                        BackgroundColor="White"
+                        StrokeThickness="0"
+                        Padding="12,8"
+                        StrokeShape="RoundRectangle 15">
+                    <Button Text="ℹ️"
+                            Command="{Binding ViewBookingDetailsCommand}"
+                            BackgroundColor="Transparent"
+                            TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                            FontSize="18"
+                            Padding="0" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- Messages List -->
+        <CollectionView Grid.Row="1"
+                        ItemsSource="{Binding Messages}"
+                        SelectionMode="None"
+                        x:Name="MessagesCollectionView"
+                        Margin="10,0">
+            
+            <CollectionView.EmptyView>
+                <StackLayout HorizontalOptions="Center" VerticalOptions="Center" Spacing="10" Padding="40">
+                    <Label Text="💬" FontSize="48" HorizontalOptions="Center" />
+                    <Label Text="No messages yet"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+                    <Label Text="Start the conversation!"
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray600}, Dark={StaticResource Gray300}}"
+                           HorizontalOptions="Center" />
+                </StackLayout>
+            </CollectionView.EmptyView>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:ChatMessage">
+                    <Grid Padding="5" RowDefinitions="Auto">
+                        
+                        <!-- Message Bubble -->
+                        <Border Grid.Row="0"
+                                BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                                StrokeThickness="0"
+                                Padding="12,8"
+                                Margin="5,2"
+                                StrokeShape="RoundRectangle 15"
+                                HorizontalOptions="End"
+                                MaximumWidthRequest="280">
+                            
+                            <StackLayout Spacing="4">
+                                <!-- Message Content -->
+                                <Label Text="{Binding Content}"
+                                       FontSize="15"
+                                       TextColor="White"
+                                       LineBreakMode="WordWrap" />
+                                
+                                <!-- Time and Status -->
+                                <Grid ColumnDefinitions="*,Auto">
+                                    <Label Grid.Column="0"
+                                           Text="{Binding SentAt, StringFormat='{0:HH:mm}'}"
+                                           FontSize="11"
+                                           TextColor="White"
+                                           Opacity="0.7" />
+                                    
+                                    <!-- Read Status -->
+                                    <Label Grid.Column="1"
+                                           Text="{Binding IsRead, Converter={StaticResource BoolToCheckConverter}}"
+                                           FontSize="11"
+                                           TextColor="White"
+                                           Opacity="0.7"
+                                           Margin="5,0,0,0" />
+                                </Grid>
+                            </StackLayout>
+                        </Border>
+                        
+                        <!-- Double Tap for Delete -->
+                        <Grid.GestureRecognizers>
+                            <TapGestureRecognizer NumberOfTapsRequired="2"
+                                                  Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ChatViewModel}}, Path=DeleteMessageCommand}"
+                                                  CommandParameter="{Binding .}" />
+                        </Grid.GestureRecognizers>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Message Input -->
+        <Border Grid.Row="2"
+                BackgroundColor="{AppThemeBinding Light={StaticResource Gray100}, Dark={StaticResource Gray800}}"
+                StrokeThickness="0"
+                Padding="15,10">
+            
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                
+                <!-- Text Input -->
+                <Border Grid.Column="0"
+                        BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray700}}"
+                        Stroke="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}"
+                        StrokeThickness="1"
+                        Padding="12,8"
+                        StrokeShape="RoundRectangle 20">
+                    
+                    <Entry Text="{Binding MessageText}"
+                           Placeholder="Type a message..."
+                           FontSize="15"
+                           BackgroundColor="Transparent"
+                           IsEnabled="{Binding CanSendMessage}"
+                           ReturnType="Send"
+                           ReturnCommand="{Binding SendMessageCommand}" />
+                </Border>
+                
+                <!-- Send Button -->
+                <Button Grid.Column="1"
+                        Text="➤"
+                        Command="{Binding SendMessageCommand}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                        TextColor="White"
+                        FontSize="18"
+                        WidthRequest="45"
+                        HeightRequest="45"
+                        CornerRadius="22"
+                        IsEnabled="{Binding CanSendMessage}" />
+            </Grid>
+        </Border>
+
+        <!-- Loading Indicator -->
+        <ActivityIndicator Grid.Row="1"
+                           IsVisible="{Binding IsBusy}"
+                           IsRunning="{Binding IsBusy}"
+                           Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                           HorizontalOptions="Center"
+                           VerticalOptions="Center" />
+    </Grid>
+
+</ContentPage>

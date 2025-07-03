@@ -1,0 +1,50 @@
+﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:PetSitterConnect"
+             xmlns:converters="clr-namespace:PetSitterConnect.Converters"
+             x:Class="PetSitterConnect.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Converters -->
+            <converters:StringToBoolConverter x:Key="StringToBoolConverter" />
+            <converters:InvertedBoolConverter x:Key="InvertedBoolConverter" />
+            <converters:BoolToTextConverter x:Key="BoolToTextConverter" />
+            <converters:StatusToColorConverter x:Key="StatusToColorConverter" />
+            <converters:StatusToPendingConverter x:Key="StatusToPendingConverter" />
+            <converters:StatusToActionsVisibleConverter x:Key="StatusToActionsVisibleConverter" />
+            <converters:CountToBoolConverter x:Key="CountToBoolConverter" />
+            <converters:CountToInvertedBoolConverter x:Key="CountToInvertedBoolConverter" />
+
+            <!-- User Role Converters -->
+            <converters:UserTypeToIconConverter x:Key="UserTypeToIconConverter" />
+            <converters:UserTypeToLabelConverter x:Key="UserTypeToLabelConverter" />
+            <converters:UserTypeToColorConverter x:Key="UserTypeToColorConverter" />
+            <converters:UserTypeToDescriptionConverter x:Key="UserTypeToDescriptionConverter" />
+            <converters:BoolToRoleContextConverter x:Key="BoolToRoleContextConverter" />
+            <converters:UserTypeToActionTextConverter x:Key="UserTypeToActionTextConverter" />
+            <converters:BoolToBookingModeConverter x:Key="BoolToBookingModeConverter" />
+
+            <!-- Chat Converters -->
+            <converters:BoolToCheckConverter x:Key="BoolToCheckConverter" />
+            <converters:MessageAlignmentConverter x:Key="MessageAlignmentConverter" />
+            <converters:MessageBubbleColorConverter x:Key="MessageBubbleColorConverter" />
+            <converters:MessageTextColorConverter x:Key="MessageTextColorConverter" />
+            <converters:MessageTimeColorConverter x:Key="MessageTimeColorConverter" />
+
+            <!-- Calendar Converters -->
+            <converters:BoolToFontAttributesConverter x:Key="BoolToFontAttributesConverter" />
+            <converters:ObjectToBoolConverter x:Key="ObjectToBoolConverter" />
+            <converters:DateToStringConverter x:Key="DateToStringConverter" />
+            <converters:CalendarDayBackgroundConverter x:Key="CalendarDayBackgroundConverter" />
+            <converters:BookingStatusToChatVisibilityConverter x:Key="BookingStatusToChatVisibilityConverter" />
+            <converters:OwnerCanAcceptConverter x:Key="OwnerCanAcceptConverter" />
+            <converters:SitterCanCompleteConverter x:Key="SitterCanCompleteConverter" />
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

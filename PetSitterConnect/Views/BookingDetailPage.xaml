@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="PetSitterConnect.Views.BookingDetailPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:PetSitterConnect.ViewModels"
+             xmlns:models="clr-namespace:PetSitterConnect.Models"
+             x:DataType="viewmodels:BookingDetailViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="20">
+            
+            <!-- Status Header -->
+            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}"
+                   BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                   CornerRadius="10"
+                   HasShadow="True">
+                
+                <Grid ColumnDefinitions="*,Auto" Padding="15">
+                    <StackLayout Grid.Column="0">
+                        <Label Text="{Binding Booking.PetCareRequest.Title}"
+                               FontSize="20"
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray900}, Dark=White}" />
+                        <Label Text="{Binding Booking.PetCareRequest.Pet.Name}"
+                               FontSize="16"
+                               TextColor="{AppThemeBinding Light={StaticResource Gray700}, Dark={StaticResource Gray200}}" />
+                    </StackLayout>
+                    
+                    <Label Grid.Column="1"
+                           Text="{Binding StatusText}"
+                           FontSize="14"
+                           FontAttributes="Bold"
+                           TextColor="White"
+                           BackgroundColor="{Binding StatusColor}"
+                           Padding="12,6"
+                           VerticalOptions="Start" />
+                </Grid>
+            </Frame>
+
+            <!-- Pet Information -->
+            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}"
+                   BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                   CornerRadius="10"
+                   HasShadow="True">
+                
+                <StackLayout Padding="15" Spacing="10">
+                    <Label Text="Pet Information"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                    
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="5">
+                        <Label Grid.Row="0" Grid.Column="0" Text="Name:" FontAttributes="Bold" />
+                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding Booking.PetCareRequest.Pet.Name}" />
+                        
+                        <Label Grid.Row="1" Grid.Column="0" Text="Type:" FontAttributes="Bold" />
+                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding Booking.PetCareRequest.Pet.Type}" />
+                        
+                        <Label Grid.Row="2" Grid.Column="0" Text="Breed:" FontAttributes="Bold" />
+                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding Booking.PetCareRequest.Pet.Breed}" />
+                        
+                        <Label Grid.Row="3" Grid.Column="0" Text="Age:" FontAttributes="Bold" />
+                        <Label Grid.Row="3" Grid.Column="1" Text="{Binding Booking.PetCareRequest.Pet.Age, StringFormat='{0} years old'}" />
+                    </Grid>
+                    
+                    <Button Text="View Pet Details"
+                            Command="{Binding ViewPetDetailsCommand}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource SecondaryDark}}"
+                            TextColor="White"
+                            FontSize="14" />
+                </StackLayout>
+            </Frame>
+
+            <!-- Booking Details -->
+            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}"
+                   BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                   CornerRadius="10"
+                   HasShadow="True">
+                
+                <StackLayout Padding="15" Spacing="10">
+                    <Label Text="Booking Details"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                    
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto" RowSpacing="5">
+                        <Label Grid.Row="0" Grid.Column="0" Text="Care Type:" FontAttributes="Bold" />
+                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding Booking.PetCareRequest.CareType}" />
+                        
+                        <Label Grid.Row="1" Grid.Column="0" Text="Start Date:" FontAttributes="Bold" />
+                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding Booking.PetCareRequest.StartDate, StringFormat='{0:MMM dd, yyyy}'}" />
+                        
+                        <Label Grid.Row="2" Grid.Column="0" Text="End Date:" FontAttributes="Bold" />
+                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding Booking.PetCareRequest.EndDate, StringFormat='{0:MMM dd, yyyy}'}" />
+                        
+                        <Label Grid.Row="3" Grid.Column="0" Text="Duration:" FontAttributes="Bold" />
+                        <Label Grid.Row="3" Grid.Column="1" Text="{Binding Booking.PetCareRequest.DurationInDays, StringFormat='{0} days'}" />
+                        
+                        <Label Grid.Row="4" Grid.Column="0" Text="Location:" FontAttributes="Bold" />
+                        <Label Grid.Row="4" Grid.Column="1" Text="{Binding Booking.PetCareRequest.Location}" />
+                        
+                        <Label Grid.Row="5" Grid.Column="0" Text="Total Amount:" FontAttributes="Bold" />
+                        <Label Grid.Row="5" Grid.Column="1" Text="{Binding Booking.TotalAmount, StringFormat='${0:F2}'}" 
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                    </Grid>
+                </StackLayout>
+            </Frame>
+
+            <!-- Contact Information -->
+            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}"
+                   BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                   CornerRadius="10"
+                   HasShadow="True">
+                
+                <StackLayout Padding="15" Spacing="10">
+                    <Label Text="Contact Information"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" RowSpacing="5">
+                        <Label Grid.Row="0" Grid.Column="0" Text="Name:" FontAttributes="Bold" />
+                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding ContactUser.FullName}" />
+
+                        <Label Grid.Row="1" Grid.Column="0" Text="Rating:" FontAttributes="Bold" />
+                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding ContactUser.AverageRating, StringFormat='{0:F1} stars'}" />
+
+                        <Label Grid.Row="2" Grid.Column="0" Text="Reviews:" FontAttributes="Bold" />
+                        <Label Grid.Row="2" Grid.Column="1" Text="{Binding ContactUser.TotalReviews, StringFormat='{0} reviews'}" />
+                    </Grid>
+
+                    <Button Text="Contact"
+                            Command="{Binding ContactUserCommand}"
+                            BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource SecondaryDark}}"
+                            TextColor="White"
+                            FontSize="14"
+                            IsEnabled="{Binding ContactUser, Converter={StaticResource ObjectToBoolConverter}}" />
+                </StackLayout>
+            </Frame>
+
+            <!-- Special Instructions -->
+            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}"
+                   BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                   CornerRadius="10"
+                   HasShadow="True"
+                   IsVisible="{Binding Booking.PetCareRequest.SpecialInstructions, Converter={StaticResource StringToBoolConverter}}">
+                
+                <StackLayout Padding="15" Spacing="10">
+                    <Label Text="Special Instructions"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                    
+                    <Label Text="{Binding Booking.PetCareRequest.SpecialInstructions}"
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray700}, Dark={StaticResource Gray200}}" />
+                </StackLayout>
+            </Frame>
+
+            <!-- Notes -->
+            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark={StaticResource Gray900}}"
+                   BorderColor="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray700}}"
+                   CornerRadius="10"
+                   HasShadow="True"
+                   IsVisible="{Binding Booking.Notes, Converter={StaticResource StringToBoolConverter}}">
+                
+                <StackLayout Padding="15" Spacing="10">
+                    <Label Text="Application Notes"
+                           FontSize="18"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+                    
+                    <Label Text="{Binding Booking.Notes}"
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light={StaticResource Gray700}, Dark={StaticResource Gray200}}" />
+                </StackLayout>
+            </Frame>
+
+            <!-- Action Buttons -->
+            <StackLayout Spacing="10">
+                
+                <!-- Sitter Actions -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="10"
+                      IsVisible="{Binding IsSitter}">
+                    
+                    <Button Grid.Column="0"
+                            Text="Accept"
+                            Command="{Binding AcceptBookingCommand}"
+                            BackgroundColor="Green"
+                            TextColor="White"
+                            IsVisible="{Binding CanAccept}" />
+                    
+                    <Button Grid.Column="1"
+                            Text="Reject"
+                            Command="{Binding RejectBookingCommand}"
+                            BackgroundColor="Red"
+                            TextColor="White"
+                            IsVisible="{Binding CanReject}" />
+                </Grid>
+
+                <!-- Common Actions -->
+                <Button Text="Cancel Booking"
+                        Command="{Binding CancelBookingCommand}"
+                        BackgroundColor="Orange"
+                        TextColor="White"
+                        IsVisible="{Binding CanCancel}" />
+
+                <Button Text="Complete Booking"
+                        Command="{Binding CompleteBookingCommand}"
+                        BackgroundColor="DarkGreen"
+                        TextColor="White"
+                        IsVisible="{Binding CanComplete}" />
+
+                <Button Text="Open Chat"
+                        Command="{Binding OpenChatCommand}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}"
+                        TextColor="White"
+                        IsVisible="{Binding CanMessage}" />
+
+                <Button Text="Leave Review"
+                        Command="{Binding LeaveReviewCommand}"
+                        BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource SecondaryDark}}"
+                        TextColor="White"
+                        IsVisible="{Binding CanReview}" />
+            </StackLayout>
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator IsVisible="{Binding IsBusy}"
+                               IsRunning="{Binding IsBusy}"
+                               Color="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource PrimaryDark}}" />
+
+        </StackLayout>
+    </ScrollView>
+
+</ContentPage>
