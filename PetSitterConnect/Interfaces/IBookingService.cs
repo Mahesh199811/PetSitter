@@ -1,6 +1,6 @@
 using PetSitterConnect.Models;
 
-namespace PetSitterConnect.Services;
+namespace PetSitterConnect.Interfaces;
 
 public interface IBookingService
 {

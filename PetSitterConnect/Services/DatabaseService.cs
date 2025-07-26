@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using PetSitterConnect.Data;
 using PetSitterConnect.Models;
+using PetSitterConnect.Interfaces;
 
 namespace PetSitterConnect.Services;
 

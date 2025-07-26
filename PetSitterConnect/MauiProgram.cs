@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using PetSitterConnect.Data;
 using PetSitterConnect.Models;
 using PetSitterConnect.Services;
+using PetSitterConnect.Interfaces;
 using PetSitterConnect.ViewModels;
 using PetSitterConnect.Views;
 using CommunityToolkit.Maui;

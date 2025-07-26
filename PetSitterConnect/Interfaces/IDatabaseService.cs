@@ -1,4 +1,4 @@
-namespace PetSitterConnect.Services;
+namespace PetSitterConnect.Interfaces;
 
 public interface IDatabaseService
 {

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using PetSitterConnect.Models;
+using PetSitterConnect.Interfaces;
 
 namespace PetSitterConnect.Services;
 

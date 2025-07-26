@@ -4,6 +4,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewmodels="clr-namespace:PetSitterConnect.ViewModels"
              xmlns:services="clr-namespace:PetSitterConnect.Services"
+             xmlns:interfaces="clr-namespace:PetSitterConnect.Interfaces"
              x:DataType="viewmodels:ChatListViewModel"
              Title="{Binding Title}">
 
@@ -70,7 +71,7 @@
                 </CollectionView.EmptyView>
 
                 <CollectionView.ItemTemplate>
-                    <DataTemplate x:DataType="services:ChatConversation">
+                    <DataTemplate x:DataType="interfaces:ChatConversation">
                         <Grid Padding="15,10" RowDefinitions="Auto">
                             
                             <Border Grid.Row="0"

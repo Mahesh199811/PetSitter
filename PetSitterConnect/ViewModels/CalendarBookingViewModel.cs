@@ -2,6 +2,7 @@ using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PetSitterConnect.Models;
 using PetSitterConnect.Services;
+using PetSitterConnect.Interfaces;
 using System.Collections.ObjectModel;
 
 namespace PetSitterConnect.ViewModels;

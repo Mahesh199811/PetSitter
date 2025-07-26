@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using PetSitterConnect.Data;
 using PetSitterConnect.Models;
+using PetSitterConnect.Interfaces;
 
 namespace PetSitterConnect.Services;
 
