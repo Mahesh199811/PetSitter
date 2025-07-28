@@ -69,6 +69,26 @@
                 <FontImageSource FontFamily="MaterialIcons" Glyph="📅" Color="{AppThemeBinding Light={StaticResource PetAccent4}, Dark={StaticResource PetAccent4}}" />
             </ShellContent.Icon>
         </ShellContent>
+
+        <ShellContent
+            x:Name="SearchTab"
+            Title="Search"
+            ContentTemplate="{DataTemplate views:SearchPage}"
+            Route="search">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="🔍" Color="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}" />
+            </ShellContent.Icon>
+        </ShellContent>
+
+        <ShellContent
+            x:Name="ReviewsTab"
+            Title="Reviews"
+            ContentTemplate="{DataTemplate views:ReviewListPage}"
+            Route="reviews">
+            <ShellContent.Icon>
+                <FontImageSource FontFamily="MaterialIcons" Glyph="⭐" Color="{AppThemeBinding Light=#FFD700, Dark=#FFD700}" />
+            </ShellContent.Icon>
+        </ShellContent>
     </TabBar>
 
 </Shell>

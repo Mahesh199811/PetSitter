@@ -58,6 +58,8 @@ public static class MauiProgram
 		builder.Services.AddScoped<INotificationService, NotificationService>();
 		builder.Services.AddScoped<IChatService, ChatService>();
 		builder.Services.AddScoped<IBookingService, BookingService>();
+		builder.Services.AddScoped<IReviewService, ReviewService>();
+		builder.Services.AddScoped<ISearchService, SearchService>();
 
 		// Register ViewModels
 		builder.Services.AddTransient<LoginViewModel>();
@@ -73,6 +75,9 @@ public static class MauiProgram
 		builder.Services.AddTransient<ChatViewModel>();
 		builder.Services.AddTransient<CalendarBookingViewModel>();
 		builder.Services.AddTransient<PetCareRequestDetailViewModel>();
+		builder.Services.AddTransient<CreateReviewViewModel>();
+		builder.Services.AddTransient<ReviewListViewModel>();
+		builder.Services.AddTransient<SearchViewModel>();
 
 		// Register Views
 		builder.Services.AddTransient<LoginPage>();
@@ -86,6 +91,9 @@ public static class MauiProgram
 		builder.Services.AddTransient<ChatPage>();
 		builder.Services.AddTransient<CalendarBookingPage>();
 		builder.Services.AddTransient<PetCareRequestDetailPage>();
+		builder.Services.AddTransient<CreateReviewPage>();
+		builder.Services.AddTransient<ReviewListPage>();
+		builder.Services.AddTransient<SearchPage>();
 
 #if DEBUG
 		builder.Logging.AddDebug();

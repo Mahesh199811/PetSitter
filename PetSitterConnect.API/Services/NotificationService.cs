@@ -120,22 +120,9 @@ public class NotificationService : INotificationService
 
     private async Task ShowNotificationAsync(string title, string message)
     {
-        // For MAUI apps, you can use local notifications or display alerts
-        // This is a simplified implementation
-        await MainThread.InvokeOnMainThreadAsync(async () =>
-        {
-            try
-            {
-                if (Application.Current?.MainPage != null)
-                {
-                    await Application.Current.MainPage.DisplayAlert(title, message, "OK");
-                }
-            }
-            catch
-            {
-                // Fallback to debug output if UI is not available
-                System.Diagnostics.Debug.WriteLine($"Notification: {title} - {message}");
-            }
-        });
+        // Note: In API, notifications are typically sent via SignalR, push notifications, or email
+        // This method should be implemented to send notifications to connected clients
+        System.Diagnostics.Debug.WriteLine($"Notification: {title} - {message}");
+        await Task.CompletedTask; // Placeholder implementation
     }
 }

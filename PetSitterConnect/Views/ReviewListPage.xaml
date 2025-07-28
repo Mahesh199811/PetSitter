@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="PetSitterConnect.Views.ReviewListPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:PetSitterConnect.ViewModels"
+             x:DataType="viewmodels:ReviewListViewModel"
+             Title="{Binding Title}">
+
+    <RefreshView Command="{Binding RefreshReviewsCommand}" IsRefreshing="{Binding IsBusy}">
+        <ScrollView>
+            <StackLayout Padding="20" Spacing="20">
+                
+                <!-- Rating Summary -->
+                <Frame BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#2C2C2E}" 
+                       CornerRadius="12" 
+                       Padding="20"
+                       HasShadow="True">
+                    <StackLayout Spacing="15">
+                        <Label Text="Rating Overview" 
+                               FontSize="20" 
+                               FontAttributes="Bold"
+                               HorizontalOptions="Center" />
+                        
+                        <StackLayout Orientation="Horizontal" 
+                                     HorizontalOptions="Center" 
+                                     Spacing="10">
+                            <Label Text="{Binding AverageRating, StringFormat='{0:F1}'}"
+                                   FontSize="36"
+                                   FontAttributes="Bold"
+                                   TextColor="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}" />
+                            <StackLayout VerticalOptions="Center">
+                                <Label Text="⭐⭐⭐⭐⭐" FontSize="20" />
+                                <Label Text="{Binding TotalReviews, StringFormat='{0} reviews'}"
+                                       FontSize="14"
+                                       TextColor="{AppThemeBinding Light=#6C757D, Dark=#8E8E93}" />
+                            </StackLayout>
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+
+                <!-- Filter Buttons -->
+                <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}"
+                       CornerRadius="12"
+                       Padding="15"
+                       HasShadow="True">
+                    <StackLayout Spacing="10">
+                        <Label Text="Filter Reviews" 
+                               FontSize="16" 
+                               FontAttributes="Bold" />
+                        
+                        <StackLayout Orientation="Horizontal" Spacing="10">
+                            <Button Text="All Reviews"
+                                    BackgroundColor="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}"
+                                    TextColor="White"
+                                    CornerRadius="20"
+                                    Padding="15,8"
+                                    Command="{Binding FilterReviewsCommand}"
+                                    CommandParameter="all" />
+                            
+                            <Button Text="As Pet Owner"
+                                    BackgroundColor="{AppThemeBinding Light=#34C759, Dark=#30D158}"
+                                    TextColor="White"
+                                    CornerRadius="20"
+                                    Padding="15,8"
+                                    Command="{Binding FilterReviewsCommand}"
+                                    CommandParameter="owner" />
+                            
+                            <Button Text="As Pet Sitter"
+                                    BackgroundColor="{AppThemeBinding Light=#FF9500, Dark=#FF9F0A}"
+                                    TextColor="White"
+                                    CornerRadius="20"
+                                    Padding="15,8"
+                                    Command="{Binding FilterReviewsCommand}"
+                                    CommandParameter="sitter" />
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+
+                <!-- Pending Reviews -->
+                <Frame BackgroundColor="{AppThemeBinding Light=#FFF3CD, Dark=#3A2F00}"
+                       CornerRadius="12"
+                       Padding="15"
+                       HasShadow="True"
+                       IsVisible="{Binding PendingReviews.Count, Converter={StaticResource CountToBoolConverter}}">
+                    <StackLayout Spacing="15">
+                        <Label Text="⏰ Pending Reviews" 
+                               FontSize="18" 
+                               FontAttributes="Bold"
+                               TextColor="{AppThemeBinding Light=#856404, Dark=#FFD60A}" />
+                        
+                        <Label Text="You have completed bookings that are waiting for your review"
+                               FontSize="14"
+                               TextColor="{AppThemeBinding Light=#856404, Dark=#FFD60A}" />
+                        
+                        <CollectionView ItemsSource="{Binding PendingReviews}">
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid ColumnDefinitions="*,Auto" 
+                                          Padding="10"
+                                          BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}"
+                                          Margin="0,5">
+                                        <StackLayout Grid.Column="0" Spacing="5">
+                                            <Label Text="{Binding Reviewee.FullName}"
+                                                   FontSize="16"
+                                                   FontAttributes="Bold" />
+                                            <Label Text="{Binding Booking.PetCareRequest.Title}"
+                                                   FontSize="14"
+                                                   TextColor="{AppThemeBinding Light=#6C757D, Dark=#8E8E93}" />
+                                        </StackLayout>
+                                        
+                                        <Button Grid.Column="1"
+                                                Text="Write Review"
+                                                BackgroundColor="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}"
+                                                TextColor="White"
+                                                CornerRadius="15"
+                                                Padding="15,8"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ReviewListViewModel}}, Path=WriteReviewCommand}"
+                                                CommandParameter="{Binding .}" />
+                                    </Grid>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </StackLayout>
+                </Frame>
+
+                <!-- Reviews List -->
+                <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}"
+                       CornerRadius="12"
+                       Padding="15"
+                       HasShadow="True">
+                    <StackLayout Spacing="15">
+                        <Label Text="Reviews" 
+                               FontSize="18" 
+                               FontAttributes="Bold" />
+                        
+                        <CollectionView ItemsSource="{Binding Reviews}">
+                            <CollectionView.EmptyView>
+                                <StackLayout Padding="20" Spacing="10">
+                                    <Label Text="📝"
+                                           FontSize="48"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="No reviews yet"
+                                           FontSize="18"
+                                           FontAttributes="Bold"
+                                           HorizontalOptions="Center" />
+                                    <Label Text="Reviews will appear here once you start using the service"
+                                           FontSize="14"
+                                           TextColor="{AppThemeBinding Light=#6C757D, Dark=#8E8E93}"
+                                           HorizontalOptions="Center"
+                                           HorizontalTextAlignment="Center" />
+                                </StackLayout>
+                            </CollectionView.EmptyView>
+                            
+                            <CollectionView.ItemTemplate>
+                                <DataTemplate>
+                                    <Frame BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#2C2C2E}"
+                                           CornerRadius="8"
+                                           Padding="15"
+                                           Margin="0,5"
+                                           HasShadow="False">
+                                        <Frame.GestureRecognizers>
+                                            <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ReviewListViewModel}}, Path=ViewReviewDetailsCommand}"
+                                                                  CommandParameter="{Binding .}" />
+                                        </Frame.GestureRecognizers>
+                                        
+                                        <StackLayout Spacing="10">
+                                            <!-- Review Header -->
+                                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                                <StackLayout Grid.Column="0" Spacing="2">
+                                                    <Label Text="{Binding Reviewer.FullName}"
+                                                           FontSize="16"
+                                                           FontAttributes="Bold" />
+                                                    <Label Text="{Binding ReviewType, Converter={StaticResource ReviewTypeToTextConverter}}"
+                                                           FontSize="12"
+                                                           TextColor="{AppThemeBinding Light=#6C757D, Dark=#8E8E93}" />
+                                                </StackLayout>
+                                                
+                                                <StackLayout Grid.Column="1" Spacing="2">
+                                                    <Label Text="{Binding Rating, Converter={StaticResource RatingToStarsConverter}}"
+                                                           FontSize="16"
+                                                           HorizontalOptions="End" />
+                                                    <Label Text="{Binding CreatedAt, StringFormat='{0:MMM dd, yyyy}'}"
+                                                           FontSize="12"
+                                                           TextColor="{AppThemeBinding Light=#6C757D, Dark=#8E8E93}"
+                                                           HorizontalOptions="End" />
+                                                </StackLayout>
+                                            </Grid>
+                                            
+                                            <!-- Pet Information -->
+                                            <Label Text="{Binding Booking.PetCareRequest.Pet.Name, StringFormat='Service for {0}'}"
+                                                   FontSize="14"
+                                                   FontAttributes="Italic"
+                                                   TextColor="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}" />
+                                            
+                                            <!-- Review Comment -->
+                                            <Label Text="{Binding Comment}"
+                                                   FontSize="14"
+                                                   LineBreakMode="WordWrap"
+                                                   IsVisible="{Binding Comment, Converter={StaticResource StringToBoolConverter}}" />
+                                        </StackLayout>
+                                    </Frame>
+                                </DataTemplate>
+                            </CollectionView.ItemTemplate>
+                        </CollectionView>
+                    </StackLayout>
+                </Frame>
+
+                <!-- Loading Indicator -->
+                <ActivityIndicator IsVisible="{Binding IsBusy}"
+                                   IsRunning="{Binding IsBusy}"
+                                   Color="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}"
+                                   HeightRequest="50" />
+            </StackLayout>
+        </ScrollView>
+    </RefreshView>
+</ContentPage>
