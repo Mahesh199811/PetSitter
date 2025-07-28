@@ -11,13 +11,16 @@ public partial class BookingDetailViewModel : BaseViewModel
 {
     private readonly IBookingService _bookingService;
     private readonly IAuthService _authService;
+    private readonly IReviewService _reviewService;
 
     public BookingDetailViewModel(
         IBookingService bookingService,
-        IAuthService authService)
+        IAuthService authService,
+        IReviewService reviewService)
     {
         _bookingService = bookingService;
         _authService = authService;
+        _reviewService = reviewService;
         Title = "Booking Details";
     }
 
@@ -53,6 +56,9 @@ public partial class BookingDetailViewModel : BaseViewModel
 
     [ObservableProperty]
     private bool canReview;
+
+    [ObservableProperty]
+    private bool hasReviewed;
 
     [ObservableProperty]
     private string statusColor = "Gray";
@@ -121,6 +127,13 @@ public partial class BookingDetailViewModel : BaseViewModel
 
         // Both parties can review after completion
         CanReview = Booking.Status == BookingStatus.Completed;
+        
+        // Check if user has already reviewed
+        Task.Run(async () => 
+        {
+            HasReviewed = await _reviewService.HasUserReviewedBookingAsync(Booking.Id, CurrentUser.Id);
+            CanReview = CanReview && !HasReviewed;
+        });
     }
 
     private void UpdateStatusDisplay()
@@ -263,7 +276,22 @@ public partial class BookingDetailViewModel : BaseViewModel
             { "BookingId", Booking.Id }
         };
 
-        await Shell.Current.GoToAsync("leavereview", navigationParameter);
+        await Shell.Current.GoToAsync("createreview", navigationParameter);
+    }
+
+    [RelayCommand]
+    private async Task ViewReviewsAsync()
+    {
+        if (Booking == null) return;
+
+        // Navigate to reviews for the other party (the one being reviewed)
+        var revieweeId = IsOwner ? Booking.SitterId : Booking.OwnerId;
+        var navigationParameter = new Dictionary<string, object>
+        {
+            { "UserId", revieweeId }
+        };
+
+        await Shell.Current.GoToAsync("reviewlist", navigationParameter);
     }
 
     [RelayCommand]

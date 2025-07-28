@@ -1,0 +1,443 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="PetSitterConnect.Views.SearchPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:PetSitterConnect.ViewModels"
+             xmlns:models="clr-namespace:PetSitterConnect.Models"
+             x:DataType="viewmodels:SearchViewModel"
+             Title="{Binding Title}">
+
+    <Grid RowDefinitions="Auto,*">
+        
+        <!-- Search Header -->
+        <Frame Grid.Row="0" 
+               BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}"
+               CornerRadius="0"
+               Padding="20,10"
+               HasShadow="True">
+            
+            <StackLayout Spacing="15">
+                
+                <!-- Search Type Toggle -->
+                <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                    <Button Grid.Column="0"
+                            Text="Find Requests"
+                            BackgroundColor="{Binding IsSearchingRequests, Converter={StaticResource BoolToColorConverter}, ConverterParameter='#007AFF,#E5E5EA'}"
+                            TextColor="{Binding IsSearchingRequests, Converter={StaticResource BoolToColorConverter}, ConverterParameter='White,#007AFF'}"
+                            Command="{Binding ToggleSearchTypeCommand}"
+                            CornerRadius="20"
+                            HeightRequest="40" />
+                    
+                    <Button Grid.Column="1"
+                            Text="Find Sitters"
+                            BackgroundColor="{Binding IsSearchingSitters, Converter={StaticResource BoolToColorConverter}, ConverterParameter='#007AFF,#E5E5EA'}"
+                            TextColor="{Binding IsSearchingSitters, Converter={StaticResource BoolToColorConverter}, ConverterParameter='White,#007AFF'}"
+                            Command="{Binding ToggleSearchTypeCommand}"
+                            CornerRadius="20"
+                            HeightRequest="40" />
+                </Grid>
+
+                <!-- Search Bar -->
+                <Frame BackgroundColor="{AppThemeBinding Light=#F2F2F7, Dark=#2C2C2E}"
+                       CornerRadius="10"
+                       Padding="0"
+                       HasShadow="False">
+                    
+                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="10" Padding="15,10">
+                        
+                        <!-- Search Entry -->
+                        <Entry Grid.Column="0"
+                               Text="{Binding SearchQuery}"
+                               Placeholder="Search for services, locations..."
+                               BackgroundColor="Transparent"
+                               FontSize="16" />
+                        
+                        <!-- Filter Button -->
+                        <Button Grid.Column="1"
+                                Text="🔍"
+                                BackgroundColor="Transparent"
+                                TextColor="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}"
+                                Command="{Binding ToggleFiltersCommand}"
+                                WidthRequest="40"
+                                HeightRequest="40" />
+                        
+                        <!-- Search Button -->
+                        <Button Grid.Column="2"
+                                Text="Search"
+                                BackgroundColor="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}"
+                                TextColor="White"
+                                Command="{Binding SearchCommand}"
+                                CornerRadius="8"
+                                Padding="15,8" />
+                    </Grid>
+                </Frame>
+
+                <!-- Search Suggestions -->
+                <CollectionView ItemsSource="{Binding SearchSuggestions}"
+                                IsVisible="{Binding SearchSuggestions.Count, Converter={StaticResource CountToBoolConverter}}"
+                                HeightRequest="120">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical" ItemSpacing="5" />
+                    </CollectionView.ItemsLayout>
+                    
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#2C2C2E}"
+                                   CornerRadius="8"
+                                   Padding="15,10"
+                                   Margin="0,2"
+                                   HasShadow="False">
+                                <Label Text="{Binding .}"
+                                       FontSize="14"
+                                       TextColor="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}">
+                                    <Label.GestureRecognizers>
+                                        <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:SearchViewModel}}, Path=SelectSuggestionCommand}"
+                                                              CommandParameter="{Binding .}" />
+                                    </Label.GestureRecognizers>
+                                </Label>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Quick Actions -->
+                <StackLayout Orientation="Horizontal" Spacing="10" HorizontalOptions="Center">
+                    <Button Text="📍 Nearby"
+                            BackgroundColor="{AppThemeBinding Light=#34C759, Dark=#30D158}"
+                            TextColor="White"
+                            Command="{Binding GetNearbyResultsCommand}"
+                            CornerRadius="15"
+                            Padding="15,8" />
+                    
+                    <Button Text="💾 Saved"
+                            BackgroundColor="{AppThemeBinding Light=#FF9500, Dark=#FF9F0A}"
+                            TextColor="White"
+                            Command="{Binding SaveSearchCommand}"
+                            CornerRadius="15"
+                            Padding="15,8" />
+                </StackLayout>
+            </StackLayout>
+        </Frame>
+
+        <!-- Main Content -->
+        <ScrollView Grid.Row="1">
+            <StackLayout Spacing="20" Padding="20">
+
+                <!-- Filters Panel -->
+                <Frame IsVisible="{Binding ShowFilters}"
+                       BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}"
+                       CornerRadius="12"
+                       Padding="20"
+                       HasShadow="True">
+                    
+                    <StackLayout Spacing="20">
+                        <Label Text="Filters" 
+                               FontSize="18" 
+                               FontAttributes="Bold" />
+
+                        <!-- Location Filter -->
+                        <StackLayout Spacing="5">
+                            <Label Text="Location" FontAttributes="Bold" />
+                            <Entry Text="{Binding SelectedLocation}"
+                                   Placeholder="Enter city or area" />
+                        </StackLayout>
+
+                        <!-- Price Range -->
+                        <StackLayout Spacing="5">
+                            <Label Text="Price Range" FontAttributes="Bold" />
+                            <Grid ColumnDefinitions="*,Auto,*" ColumnSpacing="10">
+                                <Entry Grid.Column="0"
+                                       Text="{Binding MinPrice}"
+                                       Placeholder="Min"
+                                       Keyboard="Numeric" />
+                                <Label Grid.Column="1" Text="to" VerticalOptions="Center" />
+                                <Entry Grid.Column="2"
+                                       Text="{Binding MaxPrice}"
+                                       Placeholder="Max"
+                                       Keyboard="Numeric" />
+                            </Grid>
+                        </StackLayout>
+
+                        <!-- Rating Filter -->
+                        <StackLayout Spacing="5">
+                            <Label Text="Minimum Rating" FontAttributes="Bold" />
+                            <Slider Value="{Binding MinRating}"
+                                    Minimum="1"
+                                    Maximum="5"
+                                    ThumbColor="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}" />
+                            <Label Text="{Binding MinRating, StringFormat='{0:F1} stars and above'}"
+                                   HorizontalOptions="Center" />
+                        </StackLayout>
+
+                        <!-- Date Range -->
+                        <StackLayout Spacing="5">
+                            <Label Text="Date Range" FontAttributes="Bold" />
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                                <DatePicker Grid.Column="0"
+                                            Date="{Binding StartDate}"
+                                            Format="MMM dd, yyyy" />
+                                <DatePicker Grid.Column="1"
+                                            Date="{Binding EndDate}"
+                                            Format="MMM dd, yyyy" />
+                            </Grid>
+                        </StackLayout>
+
+                        <!-- Special Options -->
+                        <StackLayout Spacing="10">
+                            <Label Text="Special Requirements" FontAttributes="Bold" />
+                            
+                            <StackLayout Orientation="Horizontal" Spacing="10">
+                                <CheckBox IsChecked="{Binding EmergencyOnly}" />
+                                <Label Text="Emergency Available" VerticalOptions="Center" />
+                            </StackLayout>
+                            
+                            <StackLayout Orientation="Horizontal" Spacing="10">
+                                <CheckBox IsChecked="{Binding ExperiencedOnly}" />
+                                <Label Text="Experienced Only" VerticalOptions="Center" />
+                            </StackLayout>
+                        </StackLayout>
+
+                        <!-- Filter Actions -->
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                            <Button Grid.Column="0"
+                                    Text="Clear"
+                                    BackgroundColor="{AppThemeBinding Light=#6C757D, Dark=#48484A}"
+                                    TextColor="White"
+                                    Command="{Binding ClearFiltersCommand}" />
+                            
+                            <Button Grid.Column="1"
+                                    Text="Apply"
+                                    BackgroundColor="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}"
+                                    TextColor="White"
+                                    Command="{Binding SearchCommand}" />
+                        </Grid>
+                    </StackLayout>
+                </Frame>
+
+                <!-- Results Header -->
+                <StackLayout IsVisible="{Binding HasResults}" Spacing="10">
+                    <Label Text="{Binding TotalResults, StringFormat='{0} results found'}"
+                           FontSize="16"
+                           FontAttributes="Bold" />
+                    
+                    <!-- Sort Options -->
+                    <Picker Title="Sort by"
+                            ItemsSource="{Binding SortOptions}"
+                            SelectedItem="{Binding SelectedSortOption}" />
+                </StackLayout>
+
+                <!-- Pet Care Request Results -->
+                <CollectionView ItemsSource="{Binding SearchResults}"
+                                IsVisible="{Binding IsSearchingRequests}"
+                                RemainingItemsThreshold="3"
+                                RemainingItemsThresholdReachedCommand="{Binding LoadMoreResultsCommand}">
+                    
+                    <CollectionView.EmptyView>
+                        <StackLayout Padding="20" Spacing="10">
+                            <Label Text="🔍"
+                                   FontSize="48"
+                                   HorizontalOptions="Center" />
+                            <Label Text="No requests found"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Try adjusting your search criteria"
+                                   FontSize="14"
+                                   TextColor="{AppThemeBinding Light=#6C757D, Dark=#8E8E93}"
+                                   HorizontalOptions="Center" />
+                        </StackLayout>
+                    </CollectionView.EmptyView>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:PetCareRequestSearchResult">
+                            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}"
+                                   CornerRadius="12"
+                                   Padding="15"
+                                   Margin="0,5"
+                                   HasShadow="True">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:SearchViewModel}}, Path=ViewRequestDetailsCommand}"
+                                                          CommandParameter="{Binding .}" />
+                                </Frame.GestureRecognizers>
+                                
+                                <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="10">
+                                    
+                                    <!-- Header -->
+                                    <Grid Grid.Row="0" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                        <StackLayout Grid.Column="0">
+                                            <Label Text="{Binding Title}"
+                                                   FontSize="16"
+                                                   FontAttributes="Bold" />
+                                            <Label Text="{Binding Location}"
+                                                   FontSize="12"
+                                                   TextColor="{AppThemeBinding Light=#6C757D, Dark=#8E8E93}" />
+                                        </StackLayout>
+                                        
+                                        <Label Grid.Column="1"
+                                               Text="{Binding PricePerDay, StringFormat='${0:F0}/day'}"
+                                               FontSize="16"
+                                               FontAttributes="Bold"
+                                               TextColor="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}"
+                                               VerticalOptions="Start" />
+                                    </Grid>
+
+                                    <!-- Pet Info -->
+                                    <StackLayout Grid.Row="1" Orientation="Horizontal" Spacing="10">
+                                        <Label Text="{Binding PetType}"
+                                               BackgroundColor="{AppThemeBinding Light=#E5E5EA, Dark=#3A3A3C}"
+                                               TextColor="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}"
+                                               Padding="8,4"
+                                               FontSize="12" />
+                                        <Label Text="{Binding PetName}"
+                                               FontSize="14"
+                                               VerticalOptions="Center" />
+                                    </StackLayout>
+
+                                    <!-- Description -->
+                                    <Label Grid.Row="2"
+                                           Text="{Binding Description}"
+                                           FontSize="14"
+                                           LineBreakMode="TailTruncation"
+                                           MaxLines="2" />
+
+                                    <!-- Footer -->
+                                    <Grid Grid.Row="3" ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                        <StackLayout Grid.Column="0" Orientation="Horizontal" Spacing="5">
+                                            <Label Text="⭐"
+                                                   FontSize="12" />
+                                            <Label Text="{Binding OwnerRating, StringFormat='{0:F1}'}"
+                                                   FontSize="12" />
+                                            <Label Text="{Binding OwnerReviewCount, StringFormat='({0} reviews)'}"
+                                                   FontSize="12"
+                                                   TextColor="{AppThemeBinding Light=#6C757D, Dark=#8E8E93}" />
+                                        </StackLayout>
+                                        
+                                        <Label Grid.Column="1"
+                                               Text="{Binding CreatedAt, StringFormat='{0:MMM dd}'}"
+                                               FontSize="12"
+                                               TextColor="{AppThemeBinding Light=#6C757D, Dark=#8E8E93}" />
+                                    </Grid>
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Pet Sitter Results -->
+                <CollectionView ItemsSource="{Binding SitterResults}"
+                                IsVisible="{Binding IsSearchingSitters}"
+                                RemainingItemsThreshold="3"
+                                RemainingItemsThresholdReachedCommand="{Binding LoadMoreResultsCommand}">
+                    
+                    <CollectionView.EmptyView>
+                        <StackLayout Padding="20" Spacing="10">
+                            <Label Text="👤"
+                                   FontSize="48"
+                                   HorizontalOptions="Center" />
+                            <Label Text="No sitters found"
+                                   FontSize="18"
+                                   FontAttributes="Bold"
+                                   HorizontalOptions="Center" />
+                            <Label Text="Try adjusting your search criteria"
+                                   FontSize="14"
+                                   TextColor="{AppThemeBinding Light=#6C757D, Dark=#8E8E93}"
+                                   HorizontalOptions="Center" />
+                        </StackLayout>
+                    </CollectionView.EmptyView>
+
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:SitterSearchResult">
+                            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}"
+                                   CornerRadius="12"
+                                   Padding="15"
+                                   Margin="0,5"
+                                   HasShadow="True">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:SearchViewModel}}, Path=ViewSitterProfileCommand}"
+                                                          CommandParameter="{Binding .}" />
+                                </Frame.GestureRecognizers>
+                                
+                                <Grid ColumnDefinitions="60,*,Auto" ColumnSpacing="15" RowSpacing="10">
+                                    
+                                    <!-- Profile Image -->
+                                    <Frame Grid.Column="0" Grid.RowSpan="3"
+                                           WidthRequest="60"
+                                           HeightRequest="60"
+                                           CornerRadius="30"
+                                           Padding="0"
+                                           BackgroundColor="{AppThemeBinding Light=#E5E5EA, Dark=#3A3A3C}">
+                                        <Label Text="👤"
+                                               FontSize="24"
+                                               HorizontalOptions="Center"
+                                               VerticalOptions="Center" />
+                                    </Frame>
+
+                                    <!-- Sitter Info -->
+                                    <StackLayout Grid.Column="1" Grid.Row="0" Spacing="5">
+                                        <Label Text="{Binding FullName}"
+                                               FontSize="16"
+                                               FontAttributes="Bold" />
+                                        <Label Text="{Binding Location}"
+                                               FontSize="12"
+                                               TextColor="{AppThemeBinding Light=#6C757D, Dark=#8E8E93}" />
+                                        <StackLayout Orientation="Horizontal" Spacing="5">
+                                            <Label Text="⭐"
+                                                   FontSize="12" />
+                                            <Label Text="{Binding AverageRating, StringFormat='{0:F1}'}"
+                                                   FontSize="12" />
+                                            <Label Text="{Binding TotalReviews, StringFormat='({0})'}"
+                                                   FontSize="12"
+                                                   TextColor="{AppThemeBinding Light=#6C757D, Dark=#8E8E93}" />
+                                        </StackLayout>
+                                    </StackLayout>
+
+                                    <!-- Price -->
+                                    <Label Grid.Column="2" Grid.Row="0"
+                                           Text="{Binding HourlyRate, StringFormat='${0:F0}/hr'}"
+                                           FontSize="16"
+                                           FontAttributes="Bold"
+                                           TextColor="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}"
+                                           VerticalOptions="Start" />
+
+                                    <!-- Bio -->
+                                    <Label Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="1"
+                                           Text="{Binding Bio}"
+                                           FontSize="14"
+                                           LineBreakMode="TailTruncation"
+                                           MaxLines="2" />
+
+                                    <!-- Skills/Services -->
+                                    <StackLayout Grid.Column="1" Grid.ColumnSpan="2" Grid.Row="2" 
+                                                 Orientation="Horizontal" 
+                                                 Spacing="5">
+                                        <Label Text="Experience:"
+                                               FontSize="12"
+                                               FontAttributes="Bold" />
+                                        <Label Text="{Binding YearsOfExperience, StringFormat='{0} years'}"
+                                               FontSize="12"
+                                               TextColor="{AppThemeBinding Light=#34C759, Dark=#30D158}" />
+                                    </StackLayout>
+                                </Grid>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Load More Button -->
+                <Button Text="Load More Results"
+                        BackgroundColor="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}"
+                        TextColor="White"
+                        Command="{Binding LoadMoreResultsCommand}"
+                        IsVisible="{Binding HasMoreResults}"
+                        CornerRadius="8"
+                        Margin="0,10" />
+
+                <!-- Loading Indicator -->
+                <ActivityIndicator IsVisible="{Binding IsBusy}"
+                                   IsRunning="{Binding IsBusy}"
+                                   Color="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}"
+                                   HeightRequest="50" />
+            </StackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

@@ -45,6 +45,27 @@
             <converters:BookingStatusToChatVisibilityConverter x:Key="BookingStatusToChatVisibilityConverter" />
             <converters:OwnerCanAcceptConverter x:Key="OwnerCanAcceptConverter" />
             <converters:SitterCanCompleteConverter x:Key="SitterCanCompleteConverter" />
+
+            <!-- Review Converters -->
+            <converters:RatingToStarsConverter x:Key="RatingToStarsConverter" />
+            <converters:RatingToColorConverter x:Key="RatingToColorConverter" />
+            <converters:ReviewTypeToTextConverter x:Key="ReviewTypeToTextConverter" />
+            <converters:ReviewTypeToIconConverter x:Key="ReviewTypeToIconConverter" />
+            <converters:ReviewTypeToColorConverter x:Key="ReviewTypeToColorConverter" />
+            <converters:IsNotNullConverter x:Key="IsNotNullConverter" />
+            <converters:BookingStatusToReviewVisibilityConverter x:Key="BookingStatusToReviewVisibilityConverter" />
+
+            <!-- Search Converters -->
+            <converters:BoolToColorConverter x:Key="BoolToColorConverter" />
+            <converters:ServiceTypeToIconConverter x:Key="ServiceTypeToIconConverter" />
+            <converters:PetTypeToIconConverter x:Key="PetTypeToIconConverter" />
+            <converters:DistanceToStringConverter x:Key="DistanceToStringConverter" />
+            <converters:PriceRangeConverter x:Key="PriceRangeConverter" />
+            <converters:AvailabilityToColorConverter x:Key="AvailabilityToColorConverter" />
+            <converters:AvailabilityToTextConverter x:Key="AvailabilityToTextConverter" />
+            <converters:LastActiveToStringConverter x:Key="LastActiveToStringConverter" />
+            <converters:UrgentToVisibilityConverter x:Key="UrgentToVisibilityConverter" />
+            <converters:EmergencyToIconConverter x:Key="EmergencyToIconConverter" />
         </ResourceDictionary>
     </Application.Resources>
 </Application>

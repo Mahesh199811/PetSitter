@@ -21,6 +21,9 @@ public partial class AppShell : Shell
 		Routing.RegisterRoute("chat", typeof(ChatPage));
 		Routing.RegisterRoute("calendar", typeof(CalendarBookingPage));
 		Routing.RegisterRoute("requestdetails", typeof(PetCareRequestDetailPage));
+		Routing.RegisterRoute("createreview", typeof(CreateReviewPage));
+		Routing.RegisterRoute("reviewlist", typeof(ReviewListPage));
+		Routing.RegisterRoute("search", typeof(SearchPage));
 	}
 
 	public void UpdateNavigationForUserType(UserType userType)

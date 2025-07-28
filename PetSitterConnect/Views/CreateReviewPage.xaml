@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="PetSitterConnect.Views.CreateReviewPage"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodels="clr-namespace:PetSitterConnect.ViewModels"
+             x:DataType="viewmodels:CreateReviewViewModel"
+             Title="{Binding Title}">
+
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="20">
+            
+            <!-- Header -->
+            <Frame BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#2C2C2E}" 
+                   CornerRadius="12" 
+                   Padding="20"
+                   HasShadow="True">
+                <StackLayout Spacing="10">
+                    <Label Text="Write a Review" 
+                           FontSize="24" 
+                           FontAttributes="Bold"
+                           HorizontalOptions="Center" />
+                    
+                    <Label Text="Share your experience to help other pet owners and sitters"
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light=#6C757D, Dark=#8E8E93}"
+                           HorizontalOptions="Center"
+                           HorizontalTextAlignment="Center" />
+                </StackLayout>
+            </Frame>
+
+            <!-- Booking Information -->
+            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}"
+                   CornerRadius="12"
+                   Padding="15"
+                   HasShadow="True"
+                   IsVisible="{Binding Booking, Converter={StaticResource IsNotNullConverter}}">
+                <StackLayout Spacing="10">
+                    <Label Text="Booking Details" 
+                           FontSize="18" 
+                           FontAttributes="Bold" />
+                    
+                    <Grid ColumnDefinitions="Auto,*" RowDefinitions="Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="5">
+                        <Label Grid.Row="0" Grid.Column="0" Text="Pet:" FontAttributes="Bold" />
+                        <Label Grid.Row="0" Grid.Column="1" Text="{Binding Booking.PetCareRequest.Pet.Name}" />
+                        
+                        <Label Grid.Row="1" Grid.Column="0" Text="Service:" FontAttributes="Bold" />
+                        <Label Grid.Row="1" Grid.Column="1" Text="{Binding Booking.PetCareRequest.Title}" />
+                        
+                        <Label Grid.Row="2" Grid.Column="0" Text="Dates:" FontAttributes="Bold" />
+                        <Label Grid.Row="2" Grid.Column="1" 
+                               Text="{Binding Booking.PetCareRequest.StartDate, StringFormat='{0:MMM dd} - {1:MMM dd, yyyy}'}" />
+                    </Grid>
+                </StackLayout>
+            </Frame>
+
+            <!-- Rating Selection -->
+            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}"
+                   CornerRadius="12"
+                   Padding="20"
+                   HasShadow="True">
+                <StackLayout Spacing="15">
+                    <Label Text="Rating" 
+                           FontSize="18" 
+                           FontAttributes="Bold" />
+                    
+                    <Label Text="How would you rate this experience?"
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light=#6C757D, Dark=#8E8E93}" />
+                    
+                    <!-- Star Rating -->
+                    <StackLayout Orientation="Horizontal" 
+                                 HorizontalOptions="Center" 
+                                 Spacing="10">
+                        <Button Text="⭐" 
+                                FontSize="32"
+                                BackgroundColor="Transparent"
+                                TextColor="{Binding SelectedRating, Converter={StaticResource RatingToColorConverter}, ConverterParameter=1}"
+                                Command="{Binding SelectRatingCommand}"
+                                CommandParameter="1" />
+                        <Button Text="⭐" 
+                                FontSize="32"
+                                BackgroundColor="Transparent"
+                                TextColor="{Binding SelectedRating, Converter={StaticResource RatingToColorConverter}, ConverterParameter=2}"
+                                Command="{Binding SelectRatingCommand}"
+                                CommandParameter="2" />
+                        <Button Text="⭐" 
+                                FontSize="32"
+                                BackgroundColor="Transparent"
+                                TextColor="{Binding SelectedRating, Converter={StaticResource RatingToColorConverter}, ConverterParameter=3}"
+                                Command="{Binding SelectRatingCommand}"
+                                CommandParameter="3" />
+                        <Button Text="⭐" 
+                                FontSize="32"
+                                BackgroundColor="Transparent"
+                                TextColor="{Binding SelectedRating, Converter={StaticResource RatingToColorConverter}, ConverterParameter=4}"
+                                Command="{Binding SelectRatingCommand}"
+                                CommandParameter="4" />
+                        <Button Text="⭐" 
+                                FontSize="32"
+                                BackgroundColor="Transparent"
+                                TextColor="{Binding SelectedRating, Converter={StaticResource RatingToColorConverter}, ConverterParameter=5}"
+                                Command="{Binding SelectRatingCommand}"
+                                CommandParameter="5" />
+                    </StackLayout>
+                    
+                    <Label Text="{Binding SelectedRating, StringFormat='{0} out of 5 stars'}"
+                           HorizontalOptions="Center"
+                           FontSize="16"
+                           FontAttributes="Bold"
+                           TextColor="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}" />
+                </StackLayout>
+            </Frame>
+
+            <!-- Comment Section -->
+            <Frame BackgroundColor="{AppThemeBinding Light=White, Dark=#1C1C1E}"
+                   CornerRadius="12"
+                   Padding="20"
+                   HasShadow="True">
+                <StackLayout Spacing="15">
+                    <Label Text="Comments (Optional)" 
+                           FontSize="18" 
+                           FontAttributes="Bold" />
+                    
+                    <Label Text="Share more details about your experience"
+                           FontSize="14"
+                           TextColor="{AppThemeBinding Light=#6C757D, Dark=#8E8E93}" />
+                    
+                    <Editor Text="{Binding Comment}"
+                            Placeholder="Tell others about your experience..."
+                            HeightRequest="120"
+                            BackgroundColor="{AppThemeBinding Light=#F8F9FA, Dark=#2C2C2E}"
+                            MaxLength="1000" />
+                    
+                    <Label Text="{Binding Comment.Length, StringFormat='{0}/1000 characters'}"
+                           FontSize="12"
+                           TextColor="{AppThemeBinding Light=#6C757D, Dark=#8E8E93}"
+                           HorizontalOptions="End" />
+                </StackLayout>
+            </Frame>
+
+            <!-- Error Message -->
+            <Label Text="{Binding ErrorMessage}"
+                   TextColor="Red"
+                   FontSize="14"
+                   IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+                   HorizontalTextAlignment="Center" />
+
+            <!-- Action Buttons -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="10">
+                <Button Grid.Column="0"
+                        Text="Cancel"
+                        BackgroundColor="{AppThemeBinding Light=#6C757D, Dark=#48484A}"
+                        TextColor="White"
+                        CornerRadius="8"
+                        HeightRequest="50"
+                        Command="{Binding CancelCommand}" />
+                
+                <Button Grid.Column="1"
+                        Text="Submit Review"
+                        BackgroundColor="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}"
+                        TextColor="White"
+                        CornerRadius="8"
+                        HeightRequest="50"
+                        Command="{Binding SubmitReviewCommand}"
+                        IsEnabled="{Binding IsSubmitting, Converter={StaticResource InvertedBoolConverter}}" />
+            </Grid>
+
+            <!-- Loading Indicator -->
+            <ActivityIndicator IsVisible="{Binding IsBusy}"
+                               IsRunning="{Binding IsBusy}"
+                               Color="{AppThemeBinding Light=#007AFF, Dark=#0A84FF}"
+                               HeightRequest="50" />
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

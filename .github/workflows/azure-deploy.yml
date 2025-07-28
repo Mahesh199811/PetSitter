@@ -1,0 +1,164 @@
+name: Deploy to Azure with Auto-Scaling
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  AZURE_WEBAPP_NAME: petsitterconnect-api
+  AZURE_WEBAPP_PACKAGE_PATH: './PetSitterConnect.API'
+  DOTNET_VERSION: '9.0.x'
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+    
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+    
+    - name: Build
+      run: dotnet build ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} --configuration Release --no-restore
+    
+    - name: Test
+      run: dotnet test ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} --no-restore --verbosity normal
+    
+    - name: Publish
+      run: dotnet publish ${{ env.AZURE_WEBAPP_PACKAGE_PATH }} --configuration Release --no-build --output ./publish
+    
+    - name: Upload artifact for deployment job
+      uses: actions/upload-artifact@v4
+      with:
+        name: .net-app
+        path: ./publish
+
+  deploy-to-azure:
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: github.ref == 'refs/heads/main'
+    
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    
+    steps:
+    - name: Download artifact from build job
+      uses: actions/download-artifact@v4
+      with:
+        name: .net-app
+        path: ./publish
+    
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    
+    - name: Deploy to Azure Web App
+      id: deploy-to-webapp
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_WEBAPP_NAME }}
+        package: ./publish
+    
+    - name: Run Database Migrations
+      run: |
+        # Install Entity Framework CLI
+        dotnet tool install --global dotnet-ef
+        
+        # Run migrations (using connection string from Azure App Settings)
+        # Note: This requires the connection string to be available as an environment variable
+        # dotnet ef database update --connection "${{ secrets.DATABASE_CONNECTION_STRING }}"
+        echo "Database migrations should be run manually or through Azure DevOps"
+    
+    - name: Configure Auto-Scaling
+      run: |
+        # Configure auto-scaling rules using Azure CLI
+        az webapp config set --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+                            --name ${{ env.AZURE_WEBAPP_NAME }} \
+                            --always-on true
+        
+        # Set up auto-scaling profile
+        az monitor autoscale create \
+          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+          --resource /subscriptions/${{ secrets.AZURE_SUBSCRIPTION_ID }}/resourceGroups/${{ secrets.AZURE_RESOURCE_GROUP }}/providers/Microsoft.Web/serverfarms/${{ secrets.AZURE_APP_SERVICE_PLAN }} \
+          --name "api-autoscale" \
+          --min-count 1 \
+          --max-count 20 \
+          --count 1
+        
+        # CPU scale-out rule
+        az monitor autoscale rule create \
+          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+          --autoscale-name "api-autoscale" \
+          --condition "CpuPercentage > 70 avg 5m" \
+          --scale out 1
+        
+        # CPU scale-in rule
+        az monitor autoscale rule create \
+          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+          --autoscale-name "api-autoscale" \
+          --condition "CpuPercentage < 30 avg 10m" \
+          --scale in 1
+        
+        # Memory scale-out rule
+        az monitor autoscale rule create \
+          --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+          --autoscale-name "api-autoscale" \
+          --condition "MemoryPercentage > 80 avg 5m" \
+          --scale out 1
+    
+    - name: Health Check
+      run: |
+        # Wait for deployment to be ready
+        sleep 30
+        
+        # Check health endpoint
+        response=$(curl -s -o /dev/null -w "%{http_code}" https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/health)
+        
+        if [ $response -eq 200 ]; then
+          echo "✅ Health check passed"
+        else
+          echo "❌ Health check failed with status code: $response"
+          exit 1
+        fi
+    
+    - name: Notify Deployment Status
+      if: always()
+      run: |
+        if [ "${{ job.status }}" == "success" ]; then
+          echo "🎉 Deployment successful!"
+          echo "🌐 App URL: https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net"
+          echo "📊 Health Check: https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/health"
+          echo "📖 API Docs: https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/swagger"
+        else
+          echo "❌ Deployment failed!"
+        fi
+
+  performance-test:
+    runs-on: ubuntu-latest
+    needs: deploy-to-azure
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Performance Test
+      run: |
+        # Simple load test to verify auto-scaling
+        echo "Running performance test to verify auto-scaling..."
+        
+        # Install Apache Bench for load testing
+        sudo apt-get update
+        sudo apt-get install -y apache2-utils
+        
+        # Run load test (100 requests, 10 concurrent)
+        ab -n 100 -c 10 https://${{ env.AZURE_WEBAPP_NAME }}.azurewebsites.net/health
+        
+        echo "Performance test completed. Monitor Azure metrics for auto-scaling behavior."

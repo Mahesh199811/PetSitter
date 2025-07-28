@@ -224,6 +224,12 @@
                         BackgroundColor="{AppThemeBinding Light={StaticResource Secondary}, Dark={StaticResource SecondaryDark}}"
                         TextColor="White"
                         IsVisible="{Binding CanReview}" />
+
+                <Button Text="View Reviews"
+                        Command="{Binding ViewReviewsCommand}"
+                        BackgroundColor="{AppThemeBinding Light=#6C757D, Dark=#48484A}"
+                        TextColor="White"
+                        IsVisible="{Binding Booking.Status, Converter={StaticResource BookingStatusToReviewVisibilityConverter}}" />
             </StackLayout>
 
             <!-- Loading Indicator -->
